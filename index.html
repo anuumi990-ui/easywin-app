@@ -14,9 +14,10 @@
             --bg-color: #050507;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --glass-bg: rgba(15, 17, 26, 0.7);
+            --glass-bg: rgba(15, 17, 26, 0.75);
             --glass-border: rgba(255, 255, 255, 0.12);
             --card-radius: 20px;
+            --success: #2ed573;
         }
 
         * {
@@ -40,30 +41,25 @@
             overflow-x: hidden;
         }
 
-        /* 3D Canvas Background */
         #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: 0;
             touch-action: none;
         }
 
-        /* UI Container */
         .container {
             width: 100%;
-            max-width: 410px;
+            max-width: 420px;
             z-index: 1;
             display: flex;
             flex-direction: column;
             gap: 14px;
-            transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
-        /* Top Pill Header */
-        .top-pill-header {
+        /* Top Header */
+        .top-header {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -75,55 +71,29 @@
             justify-content: space-between;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .user-info { display: flex; align-items: center; gap: 12px; }
         .avatar-circle {
-            width: 42px;
-            height: 42px;
+            width: 42px; height: 42px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 17px;
-            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 17px; color: #fff;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            flex-shrink: 0;
+            overflow: hidden; flex-shrink: 0;
         }
-        .avatar-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .user-details {
-            display: flex;
-            flex-direction: column;
-        }
-        .user-name {
-            font-size: 14px;
-            font-weight: 700;
-        }
-        .user-status {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: 0.8px;
-        }
+        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .user-details { display: flex; flex-direction: column; }
+        .user-name { font-size: 14px; font-weight: 700; }
+        .user-mc { font-size: 11px; color: var(--text-muted); }
         .brand-badge {
-            font-size: 11px;
-            font-weight: 800;
+            font-size: 11px; font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
 
-        /* Glassmorphism Cards */
+        /* Cards */
         .card {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -134,172 +104,159 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
         }
         .card-title {
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 14px; font-weight: 700;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        /* Smooth Tab Animations */
+        /* Tabs */
         .tab-content {
-            display: none;
-            flex-direction: column;
-            gap: 14px;
-            opacity: 0;
-            transform: translateY(8px);
+            display: none; flex-direction: column; gap: 14px;
+            opacity: 0; transform: translateY(8px);
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
-        .tab-content.active {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .tab-content.active { display: flex; opacity: 1; transform: translateY(0); }
 
         /* Tariff Cards */
         .tariff-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 12px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border-radius: 14px; padding: 12px 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: all 0.2s ease;
         }
         .tariff-card:hover, .tariff-card.active-tariff {
-            background: rgba(139, 92, 246, 0.15);
-            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.15); border-color: var(--primary);
         }
         .tariff-name { font-size: 14px; font-weight: 600; }
         .tariff-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-        .tariff-price { font-size: 16px; font-weight: 800; color: #fff; }
+        .tariff-price { font-size: 15px; font-weight: 800; color: #fff; }
 
-        /* Dark Selects & Inputs Fix (Глаза больше не режет!) */
+        /* Form Controls */
         input[type="text"], select {
             width: 100%;
             background: rgba(20, 22, 34, 0.85) !important;
             color: #f8fafc !important;
             border: 1px solid var(--glass-border) !important;
-            padding: 12px 14px;
-            border-radius: 12px;
-            outline: none;
-            font-size: 13px;
-            appearance: none;
-            -webkit-appearance: none;
+            padding: 12px 14px; border-radius: 12px; outline: none; font-size: 13px;
+            appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
             background-repeat: no-repeat !important;
             background-position: right 14px center !important;
             background-size: 15px !important;
         }
-        select option {
-            background-color: #0f111a !important;
-            color: #f8fafc !important;
-            padding: 10px;
-        }
-        input[type="text"]:focus, select:focus {
-            border-color: var(--primary) !important;
-        }
+        select option { background-color: #0f111a !important; color: #f8fafc !important; }
 
         /* Buttons */
         .btn {
-            width: 100%;
-            padding: 13px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            width: 100%; padding: 13px; border: none; border-radius: 12px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-glow {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            color: #fff; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
         .btn-glow:active { transform: scale(0.98); }
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.06); color: var(--text-main);
             border: 1px solid var(--glass-border);
         }
-        .btn-google {
-            background: #3b79db;
-            color: #fff;
-            font-weight: 600;
+        .btn-google { background: #3b79db; color: #fff; }
+
+        /* Toggle Switches */
+        .switch-container {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
         }
+        .switch-label { font-size: 13px; font-weight: 600; }
+        .switch {
+            position: relative; display: inline-block; width: 44px; height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.15); transition: .3s; border-radius: 24px;
+            border: 1px solid var(--glass-border);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
         /* Sliders */
         .setting-group { margin-bottom: 12px; }
         .setting-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         input[type="range"] {
-            width: 100%;
-            accent-color: var(--primary);
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            outline: none;
-        }
-        .color-pickers { display: flex; gap: 8px; margin-top: 6px; }
-        input[type="color"] {
-            width: 36px; height: 36px; border: none; border-radius: 8px;
-            background: none; cursor: pointer;
+            width: 100%; accent-color: var(--primary); height: 4px;
+            background: rgba(255,255,255,0.1); border-radius: 4px; outline: none;
         }
 
-        /* Bottom Navigation */
+        /* Bottom Nav */
         .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 11, 16, 0.9);
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(10, 11, 16, 0.92);
             backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0 20px 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
+            display: flex; justify-content: space-around;
+            padding: 8px 0 18px 0; z-index: 100;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 3px;
-            color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer;
-            transition: color 0.2s;
+            color: var(--text-muted); font-size: 9px; font-weight: 600; cursor: pointer;
+            transition: color 0.2s; width: 16%; text-align: center;
         }
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 18px; }
 
-        /* Preview Floating Banner */
-        #exitPreview {
-            display: none; position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(15, 17, 26, 0.85); padding: 10px 22px; border-radius: 30px;
-            color: #fff; z-index: 200; border: 1px solid var(--glass-border); backdrop-filter: blur(12px);
-            font-size: 12px; font-weight: 600; box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        /* Friend Cards & Badges */
+        .friend-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 12px; background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin-bottom: 8px;
+            cursor: pointer; transition: background 0.2s;
+        }
+        .friend-item:hover { background: rgba(255,255,255,0.07); }
+        .friend-status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .status-online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
+        .status-offline { background: #747d8c; }
+
+        .badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .badge-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px;
+        }
+        .badge-icon { font-size: 22px; }
+
+        /* Modal Popups */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+            z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-body {
+            background: #0f111a; border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius); width: 100%; max-width: 360px;
+            padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 14px;
         }
     </style>
 </head>
 <body>
 
-    <!-- WebGL/Canvas Background -->
     <canvas id="bg-canvas"></canvas>
 
-    <div id="exitPreview" onclick="togglePreview()">Коснись экрана, чтобы вернуть интерфейс</div>
-
-    <div class="container" id="ui-container">
+    <div class="container">
         
-        <!-- Капсульный Цилиндр Профиля -->
-        <div class="top-pill-header">
+        <!-- Top Profile Capsule -->
+        <div class="top-header">
             <div class="user-info">
                 <div class="avatar-circle" id="avatarContainer">
                     <span id="avatarText">E</span>
                 </div>
                 <div class="user-details">
                     <span class="user-name" id="userName">匚OÐE_ßƦEAKEƦ</span>
-                    <span class="user-status">● BETA TESTER</span>
+                    <span class="user-mc" id="userMcDisplay">MC: Not Set</span>
                 </div>
             </div>
             <div class="brand-badge">EASYWIN</div>
@@ -308,92 +265,150 @@
         <!-- TAB 1: HOME -->
         <div id="tab-home" class="tab-content active">
             <div class="card">
-                <div class="card-title">🔥 Быстрый доступ к тарифам</div>
+                <div class="card-title"><span id="txt-about-title">🚀 О клиенте EasyWin</span></div>
+                <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;" id="txt-about-desc">
+                    <b>EasyWin Client</b> — передовой чит-клиент и лаунчер нового поколения для Minecraft. Оборудован гибким HUD, умным Aimbot/TriggerBot, обходит популярные античиты (AAC, Matrix, Grim), гарантируя максимальный FPS и стабильность.
+                </p>
+                <button class="btn btn-glow" onclick="downloadLauncher()" id="txt-btn-download">📥 Скачать EasyWin Launcher</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔥 Популярные подписки</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div class="tariff-card" onclick="switchTab('store', document.querySelectorAll('.nav-item')[1])">
+                    <div class="tariff-card" onclick="openPayModal('Подписка 1 Месяц', 180)">
                         <div><div class="tariff-name">1 Месяц</div><div class="tariff-sub">Стандартный доступ</div></div>
                         <div class="tariff-price">180 ₽</div>
                     </div>
-                    <div class="tariff-card" onclick="switchTab('store', document.querySelectorAll('.nav-item')[1])">
-                        <div><div class="tariff-name">2 Месяца</div><div class="tariff-sub">Популярный выбор</div></div>
-                        <div class="tariff-price">400 ₽</div>
-                    </div>
-                    <div class="tariff-card active-tariff" onclick="switchTab('store', document.querySelectorAll('.nav-item')[1])">
+                    <div class="tariff-card active-tariff" onclick="openPayModal('Подписка 3 Месяца 🔥', 799)">
                         <div><div class="tariff-name">3 Месяца 🔥</div><div class="tariff-sub">Максимальная выгода</div></div>
                         <div class="tariff-price">799 ₽</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card">
-                <button class="btn btn-secondary" onclick="downloadLauncher()">📥 Скачать EasyWin Launcher</button>
             </div>
         </div>
 
         <!-- TAB 2: STORE -->
         <div id="tab-store" class="tab-content">
             <div class="card">
-                <div class="card-title">🛒 Подписка EasyWin</div>
+                <div class="card-title">🛒 Подписки EasyWin</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div class="tariff-card active-tariff" onclick="selectTariff(this)">
+                    <div class="tariff-card" onclick="openPayModal('Подписка 1 Месяц', 180)">
                         <div><div class="tariff-name">1 Месяц</div></div>
                         <div class="tariff-price">180 ₽</div>
                     </div>
-                    <div class="tariff-card" onclick="selectTariff(this)">
+                    <div class="tariff-card" onclick="openPayModal('Подписка 2 Месяца', 400)">
                         <div><div class="tariff-name">2 Месяца</div></div>
                         <div class="tariff-price">400 ₽</div>
                     </div>
-                    <div class="tariff-card" onclick="selectTariff(this)">
+                    <div class="tariff-card active-tariff" onclick="openPayModal('Подписка 3 Месяца', 799)">
                         <div><div class="tariff-name">3 Месяца</div></div>
                         <div class="tariff-price">799 ₽</div>
                     </div>
                 </div>
-
-                <div style="margin-top: 14px;">
-                    <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px;">Способ оплаты:</label>
-                    <select id="paymentMethod">
-                        <option value="sbp">💳 Карта / СБП (Банки РФ)</option>
-                        <option value="crypto">🪙 Криптовалюта (USDT / TON)</option>
-                        <option value="stars">⭐ Telegram Stars</option>
-                    </select>
-                </div>
-
-                <button class="btn btn-glow" style="margin-top: 14px;" onclick="buySubscription()">Оплатить подписку</button>
             </div>
 
             <div class="card">
                 <div class="card-title">🐾 Питомцы в чите (In-Game Pets)</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div class="tariff-card">
-                        <div><div class="tariff-name">🦊 Лисёнок Winny</div><div class="tariff-sub">Летает рядом с вами</div></div>
-                        <button class="btn btn-secondary" style="width: auto; padding: 6px 14px;" onclick="buyPet('Winny')">150 ₽</button>
+                    <div class="tariff-card" onclick="openPayModal('Питомец Лисёнок Winny', 150)">
+                        <div><div class="tariff-name">🦊 Лисёнок Winny</div><div class="tariff-sub">3D-модель летает рядом</div></div>
+                        <div class="tariff-price">150 ₽</div>
                     </div>
-                    <div class="tariff-card">
+                    <div class="tariff-card" onclick="openPayModal('Питомец Кибер-Дракон', 300)">
                         <div><div class="tariff-name">🐉 Кибер-Дракон</div><div class="tariff-sub">Анимированное свечение</div></div>
-                        <button class="btn btn-secondary" style="width: auto; padding: 6px 14px;" onclick="buyPet('Dragon')">300 ₽</button>
+                        <div class="tariff-price">300 ₽</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: SETTINGS & FX -->
+        <!-- TAB 3: FRIENDS (NEW!) -->
+        <div id="tab-friends" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <span>👥 Ваши друзья</span>
+                    <button class="btn btn-glow" style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="openAddFriendModal()">+ Добавить</button>
+                </div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">+15 ₽ за каждого приглашенного друга на ваш баланс!</p>
+                <div id="friendsList"></div>
+            </div>
+        </div>
+
+        <!-- TAB 4: BONUSES & WALLET -->
+        <div id="tab-ref" class="tab-content">
+            <div class="card">
+                <div class="card-title">👛 Баланс и Кошелек</div>
+                <div style="text-align: center; padding: 10px 0;">
+                    <div style="font-size: 11px; color: var(--text-muted);">Текущий баланс:</div>
+                    <div style="font-size: 32px; font-weight: 800; color: #2ed573;" id="walletBalance">45 ₽</div>
+                    <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Запрещено выводить. Можно оплачивать 100% стоимости чита и питомцев!</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔗 Реферальная программа</div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Делитесь ссылкой с друзьями. 15 ₽ за каждого активного пользователя.</p>
+                <button class="btn btn-glow" onclick="copyRefLink()">🔗 Скопировать ссылку</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎁 Ежедневный бонус</div>
+                <button class="btn btn-secondary" onclick="claimDailyReward()">Забрать +10 ₽ на баланс</button>
+            </div>
+        </div>
+
+        <!-- TAB 5: PROFILE -->
+        <div id="tab-profile" class="tab-content">
+            <div class="card">
+                <div class="card-title">🎨 Редактировать профиль</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label style="font-size: 11px; color: var(--text-muted);">Имя пользователя:</label>
+                        <input type="text" id="inputName" placeholder="Ваше имя">
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; color: var(--text-muted);">Ник в Minecraft:</label>
+                        <input type="text" id="inputMcNick" placeholder="Steve_Pro">
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; color: var(--text-muted);">URL Аватарки (необязательно):</label>
+                        <input type="text" id="inputAvatarUrl" placeholder="https://...">
+                    </div>
+                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить профиль</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🏆 Достижения и награды</div>
+                <div class="badge-grid">
+                    <div class="badge-card">
+                        <span class="badge-icon">⚡</span>
+                        <div><div style="font-size: 12px; font-weight: 700;">Первопроходец</div><div style="font-size: 9px; color: var(--text-muted);">Бета-тест MiniApp</div></div>
+                    </div>
+                    <div class="badge-card">
+                        <span class="badge-icon">👑</span>
+                        <div><div style="font-size: 12px; font-weight: 700;">VIP Статус</div><div style="font-size: 9px; color: var(--text-muted);">Подписка активна</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: SETTINGS -->
         <div id="tab-settings" class="tab-content">
             <div class="card">
-                <div class="card-title">🔑 Активация ключа доступа</div>
+                <div class="card-title">🔑 Ключ доступа и Авторизация</div>
                 <input type="text" id="keyInput" placeholder="EW-XXXX-XXXX-XXXX" style="margin-bottom: 10px;">
-                <button class="btn btn-glow" onclick="activateKey()">Активировать ключ</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-glow" onclick="activateKey()">Активировать</button>
+                    <button class="btn btn-google" onclick="loginGoogle()">Google Login</button>
+                </div>
             </div>
 
             <div class="card">
-                <div class="card-title">🌐 Авторизация</div>
-                <button class="btn btn-google" onclick="loginGoogle()">Войти через Google</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">⚙️ Системные параметры</div>
+                <div class="card-title">⚙️ Настройки и Эффекты</div>
                 
                 <div class="setting-group">
-                    <div class="setting-header"><span>Язык интерфейса:</span></div>
+                    <div class="setting-header"><span>Язык / Language:</span></div>
                     <select id="langSelect" onchange="changeLanguage()">
                         <option value="ru">Русский 🇷🇺</option>
                         <option value="en">English 🇬🇧</option>
@@ -401,99 +416,53 @@
                     </select>
                 </div>
 
-                <div class="setting-group">
-                    <div class="setting-header"><span>Тема кнопок и элементов:</span></div>
-                    <select id="themeSelect" onchange="changeTheme()">
-                        <option value="purple">Фиолетовый Неон</option>
-                        <option value="red">Красный Агрессор</option>
-                        <option value="green">Киберпанк Зеленый</option>
-                    </select>
+                <!-- Toggles for Effects -->
+                <div class="switch-container">
+                    <span class="switch-label">❄️ Отображать Снег</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleSnow" checked onchange="toggleEffect('snow')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="switch-container">
+                    <span class="switch-label">🌌 Отображать Чёрную Дыру</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleBh" checked onchange="toggleEffect('bh')">
+                        <span class="slider"></span>
+                    </label>
                 </div>
 
                 <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border);">
-                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Статус ПК (HWID): <b style="color: #2ed573;">НЕ ПРИВЯЗАН</b></div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">HWID ПК: <b style="color: #2ed573;" id="hwidStatus">ПРИВЯЗАН</b></div>
                     <button class="btn btn-secondary" onclick="resetHwid()">🔄 Сбросить HWID</button>
                 </div>
             </div>
 
-            <button class="btn btn-secondary" onclick="togglePreview()">👁 Предпросмотр (Скрыть UI)</button>
-
-            <!-- Снег -->
-            <div class="card">
-                <div class="card-title">❄️ Настройка снега</div>
+            <!-- Снег настройки -->
+            <div class="card" id="snowSettingsCard">
+                <div class="card-title">❄️ Параметры Снега</div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Количество снежинок</span> <span id="valCount">120</span></div>
-                    <input type="range" id="sCount" min="0" max="350" value="120">
+                    <div class="setting-header"><span>Количество</span> <span id="valCount">120</span></div>
+                    <input type="range" id="sCount" min="0" max="300" value="120">
                 </div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Скорость падения</span> <span id="valSpeed">2.0</span></div>
+                    <div class="setting-header"><span>Скорость</span> <span id="valSpeed">2.0</span></div>
                     <input type="range" id="sSpeed" min="0.1" max="8" step="0.1" value="2.0">
                 </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Размер частиц</span> <span id="valSize">2.5</span></div>
-                    <input type="range" id="sSize" min="0.5" max="8" step="0.1" value="2.5">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Угол наклона</span> <span id="valAngle">0°</span></div>
-                    <input type="range" id="sAngle" min="-45" max="45" value="0">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Сила ветра</span> <span id="valWind">0</span></div>
-                    <input type="range" id="sWind" min="-5" max="5" step="0.1" value="0">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Градиент палитры</span></div>
-                    <div class="color-pickers">
-                        <input type="color" id="sC1" value="#ffffff">
-                        <input type="color" id="sC2" value="#8b5cf6">
-                        <input type="color" id="sC3" value="#3b82f6">
-                    </div>
-                </div>
             </div>
 
-            <!-- Чёрная Дыра -->
-            <div class="card">
-                <div class="card-title">🌌 Черная Дыра</div>
+            <!-- Черная дыра настройки -->
+            <div class="card" id="bhSettingsCard">
+                <div class="card-title">🌌 Параметры Черной Дыры</div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Масштаб</span> <span id="valBhScale">1.0</span></div>
-                    <input type="range" id="bhScale" min="0.2" max="2.5" step="0.1" value="1.0">
+                    <input type="range" id="bhScale" min="0.2" max="2.0" step="0.1" value="1.0">
                 </div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Яркость</span> <span id="valBhBright">1.0</span></div>
-                    <input type="range" id="bhBright" min="0" max="2" step="0.1" value="1.0">
+                    <div class="setting-header"><span>Цвет Энергии</span></div>
+                    <input type="color" id="bhColor" value="#8b5cf6" style="width: 100%; height: 36px; border:none; background:none;">
                 </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Смещение X / Y</span></div>
-                    <input type="range" id="bhX" min="-180" max="180" value="0" style="margin-bottom: 8px;">
-                    <input type="range" id="bhY" min="-250" max="250" value="0">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Цвет энергии</span></div>
-                    <input type="color" id="bhColor" value="#8b5cf6" style="width: 100%; height: 36px;">
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: PROFILE -->
-        <div id="tab-profile" class="tab-content">
-            <div class="card">
-                <div class="card-title">🎨 Оформление профиля</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Персонализируйте внешний вид профиля и статус аккаунта.</p>
-                <button class="btn btn-secondary" onclick="tg.showAlert('Эксклюзивные кастомизации будут доступны скоро!')">Выбрать рамку профиля</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: REFERRALS -->
-        <div id="tab-ref" class="tab-content">
-            <div class="card">
-                <div class="card-title">👥 Реферальная система</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Получайте **15%** от всех покупок ваших друзей!</p>
-                <button class="btn btn-glow" onclick="copyRefLink()">🔗 Скопировать ссылку</button>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🎁 Ежедневный бонус</div>
-                <button class="btn btn-secondary" onclick="claimDailyReward()">Забрать +10 монет EasyWin</button>
             </div>
         </div>
 
@@ -503,23 +472,70 @@
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this)">
             <span class="nav-icon">🏠</span>
-            <span>Главная</span>
+            <span id="nav-home">Главная</span>
         </div>
         <div class="nav-item" onclick="switchTab('store', this)">
             <span class="nav-icon">🛒</span>
-            <span>Магазин</span>
+            <span id="nav-store">Магазин</span>
         </div>
-        <div class="nav-item" onclick="switchTab('settings', this)">
-            <span class="nav-icon">⚙️</span>
-            <span>Настройки</span>
+        <div class="nav-item" onclick="switchTab('friends', this)">
+            <span class="nav-icon">👥</span>
+            <span id="nav-friends">Друзья</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('ref', this)">
+            <span class="nav-icon">🎁</span>
+            <span id="nav-ref">Бонусы</span>
         </div>
         <div class="nav-item" onclick="switchTab('profile', this)">
             <span class="nav-icon">👤</span>
-            <span>Профиль</span>
+            <span id="nav-profile">Профиль</span>
         </div>
-        <div class="nav-item" onclick="switchTab('ref', this)">
-            <span class="nav-icon">👥</span>
-            <span>Рефералы</span>
+        <div class="nav-item" onclick="switchTab('settings', this)">
+            <span class="nav-icon">⚙️</span>
+            <span id="nav-settings">Настройки</span>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="payModal">
+        <div class="modal-body">
+            <div class="card-title"><span id="payModalTitle">Оплата</span></div>
+            <p style="font-size: 12px; color: var(--text-muted);">К оплате: <b style="color:#fff" id="payModalPrice">0 ₽</b></p>
+            
+            <label style="font-size: 11px; color: var(--text-muted);">Выберите способ оплаты:</label>
+            <select id="paySelectMethod">
+                <option value="card">💳 Мировые карты / СБП</option>
+                <option value="crypto">🪙 Криптовалюта (USDT / TON)</option>
+                <option value="stars">⭐ Telegram Stars</option>
+                <option value="balance">👛 Внутренний баланс (45 ₽)</option>
+            </select>
+
+            <button class="btn btn-glow" onclick="processPayment()">Подтвердить оплату</button>
+            <button class="btn btn-secondary" onclick="closeModal('payModal')">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Add Friend Modal -->
+    <div class="modal-overlay" id="addFriendModal">
+        <div class="modal-body">
+            <div class="card-title">➕ Добавить друга</div>
+            <p style="font-size: 11px; color: var(--text-muted);">Введите Telegram Username или Nickname друга:</p>
+            <input type="text" id="friendInput" placeholder="@username">
+            <button class="btn btn-glow" onclick="submitAddFriend()">Добавить (+15 ₽)</button>
+            <button class="btn btn-secondary" onclick="closeModal('addFriendModal')">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- View Friend Profile Modal -->
+    <div class="modal-overlay" id="viewFriendModal">
+        <div class="modal-body">
+            <div class="card-title"><span id="fProfileName">Друг</span></div>
+            <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
+                <div>Minecraft Nick: <b style="color:#fff;" id="fProfileMc">-</b></div>
+                <div>Подписка: <b style="color:var(--primary);" id="fProfileSub">-</b></div>
+                <div>Статус в Лаунчере: <b style="color:#2ed573;" id="fProfileStatus">-</b></div>
+            </div>
+            <button class="btn btn-secondary" onclick="closeModal('viewFriendModal')">Закрыть</button>
         </div>
     </div>
 
@@ -527,22 +543,116 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Инициализация Telegram
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const user = tg.initDataUnsafe.user;
-            document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            if (user.photo_url) {
-                document.getElementById('avatarContainer').innerHTML = `<img src="${user.photo_url}">`;
-            } else {
-                document.getElementById('avatarText').innerText = user.first_name.charAt(0).toUpperCase();
+        let userState = {
+            name: "匚OÐE_ßƦEAKEƦ",
+            mcNick: "CodeBreaker_MC",
+            avatarUrl: "",
+            balance: 45
+        };
+
+        // Тексты локализации
+        const translations = {
+            ru: {
+                home: "Главная", store: "Магазин", friends: "Друзья", ref: "Бонусы", profile: "Профиль", settings: "Настройки",
+                aboutTitle: "🚀 О клиенте EasyWin",
+                aboutDesc: "<b>EasyWin Client</b> — передовой чит-клиент и лаунчер нового поколения для Minecraft. Оборудован гибким HUD, умным Aimbot/TriggerBot, обходит популярные античиты (AAC, Matrix, Grim).",
+                download: "📥 Скачать EasyWin Launcher"
+            },
+            en: {
+                home: "Home", store: "Store", friends: "Friends", ref: "Bonuses", profile: "Profile", settings: "Settings",
+                aboutTitle: "🚀 About EasyWin Client",
+                aboutDesc: "<b>EasyWin Client</b> — next-gen cheat client & launcher for Minecraft. Features smooth HUD, smart Aimbot, and bypasses popular anti-cheats (AAC, Matrix, Grim).",
+                download: "📥 Download EasyWin Launcher"
+            },
+            ua: {
+                home: "Головна", store: "Магазин", friends: "Друзі", ref: "Бонуси", profile: "Профіль", settings: "Налаштування",
+                aboutTitle: "🚀 Про клієнт EasyWin",
+                aboutDesc: "<b>EasyWin Client</b> — передовий чит-клієнт та лаунчер нового покоління для Minecraft. Оснащений гнучким HUD, розумним Aimbot, обходить популярні античити.",
+                download: "📥 Завантажити EasyWin Launcher"
             }
+        };
+
+        // Друзья
+        let friendsData = [
+            { id: 1, name: "sheet_ghost", mc: "Ghost_MC", sub: "3 Месяца", online: true },
+            { id: 2, name: "Iskandar", mc: "Iskandar_Pro", sub: "1 Месяц", online: false }
+        ];
+
+        function renderFriends() {
+            const container = document.getElementById('friendsList');
+            container.innerHTML = '';
+            friendsData.forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'friend-item';
+                item.onclick = () => viewFriendProfile(f);
+                item.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="friend-status ${f.online ? 'status-online' : 'status-offline'}"></span>
+                        <div>
+                            <div style="font-size:13px; font-weight:700; color:#fff;">${f.name}</div>
+                            <div style="font-size:10px; color:var(--text-muted);">MC: ${f.mc}</div>
+                        </div>
+                    </div>
+                    <span style="font-size:10px; font-weight:700; color:var(--primary); background:rgba(139,92,246,0.15); padding:4px 8px; border-radius:8px;">${f.sub}</span>
+                `;
+                container.appendChild(item);
+            });
         }
 
-        // Переключение Вкладок Без Багов
+        function viewFriendProfile(f) {
+            document.getElementById('fProfileName').innerText = f.name;
+            document.getElementById('fProfileMc').innerText = f.mc;
+            document.getElementById('fProfileSub').innerText = f.sub;
+            document.getElementById('fProfileStatus').innerText = f.online ? "● В игре" : "○ Оффлайн";
+            document.getElementById('viewFriendModal').style.display = 'flex';
+        }
+
+        function openAddFriendModal() { document.getElementById('addFriendModal').style.display = 'flex'; }
+        
+        function submitAddFriend() {
+            const val = document.getElementById('friendInput').value.trim();
+            if(!val) return tg.showAlert("Введите ник друга!");
+            
+            // Защита от спама/ботов
+            if(val.length < 3) return tg.showAlert("Слишком короткое имя!");
+
+            friendsData.push({ id: Date.now(), name: val, mc: val + "_MC", sub: "Бесплатно", online: true });
+            userState.balance += 15;
+            document.getElementById('walletBalance').innerText = userState.balance + " ₽";
+            renderFriends();
+            closeModal('addFriendModal');
+            document.getElementById('friendInput').value = '';
+            tg.showAlert(`🎉 Друг добавлен! Вам начислено +15 ₽.`);
+        }
+
+        // Оплата Modal
+        let currentPayPrice = 0;
+        function openPayModal(title, price) {
+            currentPayPrice = price;
+            document.getElementById('payModalTitle').innerText = title;
+            document.getElementById('payModalPrice').innerText = price + " ₽";
+            document.getElementById('payModal').style.display = 'flex';
+        }
+
+        function processPayment() {
+            const method = document.getElementById('paySelectMethod').value;
+            if(method === 'balance') {
+                if(userState.balance < currentPayPrice) {
+                    return tg.showAlert("❌ Недостаточно средств на внутреннем балансе!");
+                }
+                userState.balance -= currentPayPrice;
+                document.getElementById('walletBalance').innerText = userState.balance + " ₽";
+            }
+            closeModal('payModal');
+            tg.showAlert("✅ Оплата успешно обработана!");
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Переключение Вкладок
         function switchTab(tabName, el) {
             const currentTab = document.querySelector('.tab-content.active');
             const targetTab = document.getElementById('tab-' + tabName);
-
             if (currentTab === targetTab) return;
 
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -559,60 +669,62 @@
                         targetTab.style.transform = 'translateY(0)';
                     }, 20);
                 }, 150);
-            } else {
-                targetTab.classList.add('active');
-                targetTab.style.opacity = '1';
-                targetTab.style.transform = 'translateY(0)';
             }
         }
 
-        function selectTariff(el) {
-            document.querySelectorAll('#tab-store .tariff-card').forEach(c => c.classList.remove('active-tariff'));
-            el.classList.add('active-tariff');
+        // Профиль
+        function saveProfile() {
+            const name = document.getElementById('inputName').value.trim();
+            const mc = document.getElementById('inputMcNick').value.trim();
+            const avatar = document.getElementById('inputAvatarUrl').value.trim();
+
+            if(name) userState.name = name;
+            if(mc) userState.mcNick = mc;
+            if(avatar) userState.avatarUrl = avatar;
+
+            document.getElementById('userName').innerText = userState.name;
+            document.getElementById('userMcDisplay').innerText = "MC: " + userState.mcNick;
+
+            if(userState.avatarUrl) {
+                document.getElementById('avatarContainer').innerHTML = `<img src="${userState.avatarUrl}">`;
+            }
+
+            tg.showAlert("💾 Профиль сохранен!");
         }
 
-        // Режим предпросмотра
-        let isPreview = false;
-        function togglePreview() {
-            isPreview = !isPreview;
-            const ui = document.getElementById('ui-container');
-            const nav = document.querySelector('.bottom-nav');
-            const btn = document.getElementById('exitPreview');
+        // Локализация
+        function changeLanguage() {
+            const lang = document.getElementById('langSelect').value;
+            const t = translations[lang] || translations.ru;
+            
+            document.getElementById('nav-home').innerText = t.home;
+            document.getElementById('nav-store').innerText = t.store;
+            document.getElementById('nav-friends').innerText = t.friends;
+            document.getElementById('nav-ref').innerText = t.ref;
+            document.getElementById('nav-profile').innerText = t.profile;
+            document.getElementById('nav-settings').innerText = t.settings;
 
-            ui.style.opacity = isPreview ? '0' : '1';
-            ui.style.pointerEvents = isPreview ? 'none' : 'all';
-            nav.style.transform = isPreview ? 'translateY(100px)' : 'translateY(0)';
-            btn.style.display = isPreview ? 'block' : 'none';
+            document.getElementById('txt-about-title').innerText = t.aboutTitle;
+            document.getElementById('txt-about-desc').innerHTML = t.aboutDesc;
+            document.getElementById('txt-btn-download').innerText = t.download;
         }
 
-        // Действия
-        function activateKey() { tg.showAlert("🔍 Проверка ключа..."); }
+        // Экшены
+        function activateKey() { tg.showAlert("🔑 Проверка ключа..."); }
         function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher!"); }
-        function buySubscription() { tg.showAlert("💳 Оплата подписки..."); }
-        function buyPet(name) { tg.showAlert("🐾 Питомец " + name + " куплен!"); }
-        function claimDailyReward() { tg.showAlert("🎁 Вы получили +10 монет EasyWin!"); }
-        function loginGoogle() { tg.showAlert("🌐 Окно Google..."); }
-        function resetHwid() { tg.showAlert("🔄 Запрос сброса HWID!"); }
-        function copyRefLink() { tg.showAlert("🔗 Ссылка скопирована!"); }
-        function changeLanguage() { saveSettings(); tg.showAlert("🌐 Язык сохранен!"); }
-
-        function changeTheme() {
-            const val = document.getElementById('themeSelect').value;
-            const root = document.documentElement;
-            if (val === 'red') {
-                root.style.setProperty('--primary', '#ff4757');
-                root.style.setProperty('--secondary', '#ffa502');
-            } else if (val === 'green') {
-                root.style.setProperty('--primary', '#2ed573');
-                root.style.setProperty('--secondary', '#1e90ff');
-            } else {
-                root.style.setProperty('--primary', '#8b5cf6');
-                root.style.setProperty('--secondary', '#3b82f6');
-            }
-            saveSettings();
+        function loginGoogle() { tg.showAlert("🌐 Окно авторизации Google..."); }
+        function resetHwid() {
+            document.getElementById('hwidStatus').innerText = "СБРОШЕН";
+            tg.showAlert("🔄 HWID успешно сброшен!");
+        }
+        function copyRefLink() { tg.showAlert("🔗 Реферальная ссылка скопирована!"); }
+        function claimDailyReward() {
+            userState.balance += 10;
+            document.getElementById('walletBalance').innerText = userState.balance + " ₽";
+            tg.showAlert("🎁 Вы получили +10 ₽ на баланс!");
         }
 
-        // --- ДВИЖОК CANVAS (ОПТИМИЗИРОВАННЫЙ С LOCALSTORAGE) ---
+        // CANVAS GRAPHICS
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let cw, ch;
@@ -624,239 +736,67 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Структура настроек
         const settings = {
-            snow: { count: 120, speed: 2.0, size: 2.5, angle: 0, wind: 0, c1: '#ffffff', c2: '#8b5cf6', c3: '#3b82f6' },
-            bh: { scale: 1.0, bright: 1.0, x: 0, y: 0, color: '#8b5cf6', rotationZ: 0.2, rotationX: 1.2 },
-            theme: 'purple',
-            lang: 'ru'
+            snowEnabled: true,
+            bhEnabled: true,
+            snow: { count: 120, speed: 2.0 },
+            bh: { scale: 1.0, color: '#8b5cf6' }
         };
 
-        // Загрузка из LocalStorage
-        function loadSavedSettings() {
-            const saved = localStorage.getItem('easywin_app_settings');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    if (parsed.snow) Object.assign(settings.snow, parsed.snow);
-                    if (parsed.bh) Object.assign(settings.bh, parsed.bh);
-                    if (parsed.theme) settings.theme = parsed.theme;
-                    if (parsed.lang) settings.lang = parsed.lang;
-                } catch(e) {}
+        function toggleEffect(type) {
+            if(type === 'snow') {
+                settings.snowEnabled = document.getElementById('toggleSnow').checked;
+                document.getElementById('snowSettingsCard').style.display = settings.snowEnabled ? 'block' : 'none';
+            } else if(type === 'bh') {
+                settings.bhEnabled = document.getElementById('toggleBh').checked;
+                document.getElementById('bhSettingsCard').style.display = settings.bhEnabled ? 'block' : 'none';
             }
-            syncUIWithSettings();
-        }
-
-        // Сохранение в LocalStorage
-        function saveSettings() {
-            localStorage.setItem('easywin_app_settings', JSON.stringify(settings));
-        }
-
-        function syncUIWithSettings() {
-            document.getElementById('sCount').value = settings.snow.count;
-            document.getElementById('valCount').innerText = settings.snow.count;
-            document.getElementById('sSpeed').value = settings.snow.speed;
-            document.getElementById('valSpeed').innerText = settings.snow.speed;
-            document.getElementById('sSize').value = settings.snow.size;
-            document.getElementById('valSize').innerText = settings.snow.size;
-            document.getElementById('sAngle').value = settings.snow.angle;
-            document.getElementById('valAngle').innerText = settings.snow.angle + '°';
-            document.getElementById('sWind').value = settings.snow.wind;
-            document.getElementById('valWind').innerText = settings.snow.wind;
-            document.getElementById('sC1').value = settings.snow.c1;
-            document.getElementById('sC2').value = settings.snow.c2;
-            document.getElementById('sC3').value = settings.snow.c3;
-
-            document.getElementById('bhScale').value = settings.bh.scale;
-            document.getElementById('valBhScale').innerText = settings.bh.scale;
-            document.getElementById('bhBright').value = settings.bh.bright;
-            document.getElementById('valBhBright').innerText = settings.bh.bright;
-            document.getElementById('bhX').value = settings.bh.x;
-            document.getElementById('bhY').value = settings.bh.y;
-            document.getElementById('bhColor').value = settings.bh.color;
-
-            document.getElementById('themeSelect').value = settings.theme;
-            document.getElementById('langSelect').value = settings.lang;
-            changeTheme();
-        }
-
-        const bindSlider = (id, obj, key, valId, isFloat = false) => {
-            const el = document.getElementById(id);
-            const valEl = valId ? document.getElementById(valId) : null;
-            if(!el) return;
-            el.addEventListener('input', (e) => {
-                const val = isFloat ? parseFloat(e.target.value) : parseInt(e.target.value);
-                settings[obj][key] = val;
-                if(valEl) valEl.innerText = val + (id === 'sAngle' ? '°' : '');
-                if(id === 'sCount') initSnow();
-                saveSettings();
-            });
-        };
-        const bindColor = (id, obj, key) => {
-            const el = document.getElementById(id);
-            if(el) el.addEventListener('input', (e) => {
-                settings[obj][key] = e.target.value;
-                saveSettings();
-            });
-        };
-
-        bindSlider('sCount', 'snow', 'count', 'valCount');
-        bindSlider('sSpeed', 'snow', 'speed', 'valSpeed', true);
-        bindSlider('sSize', 'snow', 'size', 'valSize', true);
-        bindSlider('sAngle', 'snow', 'angle', 'valAngle');
-        bindSlider('sWind', 'snow', 'wind', 'valWind', true);
-        bindColor('sC1', 'snow', 'c1');
-        bindColor('sC2', 'snow', 'c2');
-        bindColor('sC3', 'snow', 'c3');
-
-        bindSlider('bhScale', 'bh', 'scale', 'valBhScale', true);
-        bindSlider('bhBright', 'bh', 'bright', 'valBhBright', true);
-        bindSlider('bhX', 'bh', 'x', null);
-        bindSlider('bhY', 'bh', 'y', null);
-        bindColor('bhColor', 'bh', 'color');
-
-        // Вращение Чёрной Дыры (Исправлен баг пропажи)
-        let isDragging = false, lastX = 0, lastY = 0;
-        
-        const startDrag = (x, y) => { isDragging = true; lastX = x; lastY = y; };
-        const moveDrag = (x, y, e) => {
-            if(!isDragging) return;
-            if (e && e.cancelable) e.preventDefault();
-            const dx = x - lastX; 
-            const dy = y - lastY;
-            settings.bh.rotationZ += dx * 0.008;
-            settings.bh.rotationX -= dy * 0.008;
-            settings.bh.rotationX = Math.max(0.1, Math.min(Math.PI/1.5, settings.bh.rotationX));
-            lastX = x; lastY = y;
-            saveSettings();
-        };
-        const stopDrag = () => { isDragging = false; };
-
-        canvas.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
-        canvas.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY, e));
-        window.addEventListener('mouseup', stopDrag);
-
-        canvas.addEventListener('touchstart', e => {
-            if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY);
-        }, {passive: false});
-        canvas.addEventListener('touchmove', e => {
-            if (e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY, e);
-        }, {passive: false});
-        window.addEventListener('touchend', stopDrag);
-
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : {r:255,g:255,b:255};
-        }
-
-        function getTransitionColor(phase) {
-            const c1 = hexToRgb(settings.snow.c1);
-            const c2 = hexToRgb(settings.snow.c2);
-            const c3 = hexToRgb(settings.snow.c3);
-            let r, g, b;
-            if(phase < 0.33) {
-                let p = phase / 0.33;
-                r = c1.r + (c2.r - c1.r) * p; g = c1.g + (c2.g - c1.g) * p; b = c1.b + (c2.b - c1.b) * p;
-            } else if(phase < 0.66) {
-                let p = (phase - 0.33) / 0.33;
-                r = c2.r + (c3.r - c2.r) * p; g = c2.g + (c3.g - c2.g) * p; b = c2.b + (c3.b - c2.b) * p;
-            } else {
-                let p = (phase - 0.66) / 0.34;
-                r = c3.r + (c1.r - c3.r) * p; g = c3.g + (c1.g - c3.g) * p; b = c3.b + (c1.b - c3.b) * p;
-            }
-            return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 0.85)`;
         }
 
         let particles = [];
-        function initSnow() {
-            particles = [];
-            for(let i=0; i<settings.snow.count; i++) {
-                particles.push({
-                    x: Math.random() * cw,
-                    y: Math.random() * ch,
-                    r: Math.random() * 1.5 + 0.5,
-                    speedMult: Math.random() * 0.8 + 0.2,
-                    colorPhase: Math.random()
-                });
-            }
+        for(let i=0; i<150; i++) {
+            particles.push({ x: Math.random()*cw, y: Math.random()*ch, r: Math.random()*1.5 + 0.5, speed: Math.random()*0.8 + 0.2 });
         }
 
-        // Анимация без lag-емких операций (60 FPS)
         function animate() {
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, cw, ch);
 
-            // Рендер Черной Дыры
-            const centerX = cw/2 + settings.bh.x;
-            const centerY = ch/4 + settings.bh.y;
-            const baseRadius = 50 * settings.bh.scale;
-            
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            
-            // Свечение фона
-            const glow = ctx.createRadialGradient(0, 0, baseRadius*0.8, 0, 0, baseRadius*3.5);
-            const bhRgb = hexToRgb(settings.bh.color);
-            glow.addColorStop(0, `rgba(${bhRgb.r}, ${bhRgb.g}, ${bhRgb.b}, ${0.35 * settings.bh.bright})`);
-            glow.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = glow;
-            ctx.beginPath();
-            ctx.arc(0, 0, baseRadius*3.5, 0, Math.PI*2);
-            ctx.fill();
+            // Чёрная дыра
+            if(settings.bhEnabled) {
+                const centerX = cw/2;
+                const centerY = ch/4;
+                const radius = 45 * settings.bh.scale;
 
-            // Вращающийся диск
-            ctx.rotate(settings.bh.rotationZ);
-            ctx.beginPath();
-            ctx.ellipse(0, 0, baseRadius*2.2, baseRadius*2.2 * Math.cos(settings.bh.rotationX), 0, 0, Math.PI*2);
-            ctx.strokeStyle = `rgba(${bhRgb.r}, ${bhRgb.g}, ${bhRgb.b}, ${0.85 * settings.bh.bright})`;
-            ctx.lineWidth = 12 * settings.bh.scale;
-            ctx.stroke();
-            
-            ctx.rotate(-settings.bh.rotationZ);
-            ctx.beginPath();
-            ctx.arc(0, 0, baseRadius, 0, Math.PI*2);
-            ctx.fillStyle = '#000000';
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.arc(0, 0, baseRadius + 1.5, 0, Math.PI*2);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * settings.bh.bright})`;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-            
-            ctx.restore();
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                
+                const glow = ctx.createRadialGradient(0, 0, radius*0.8, 0, 0, radius*3);
+                glow.addColorStop(0, settings.bh.color);
+                glow.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = glow;
+                ctx.beginPath(); ctx.arc(0, 0, radius*3, 0, Math.PI*2); ctx.fill();
 
-            // Рендер Оптимизированного Снега
-            const angleRad = settings.snow.angle * Math.PI / 180;
-            const baseDirX = Math.sin(angleRad);
-            const baseDirY = Math.cos(angleRad);
+                ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI*2);
+                ctx.fillStyle = '#000000'; ctx.fill();
+                ctx.restore();
+            }
 
-            for(let i = 0; i < particles.length; i++) {
-                if(i >= settings.snow.count) break;
-                const p = particles[i];
-
-                p.x += (baseDirX * settings.snow.speed * p.speedMult) + settings.snow.wind;
-                p.y += (baseDirY * settings.snow.speed * p.speedMult);
-
-                p.colorPhase += 0.002 * p.speedMult;
-                if(p.colorPhase > 1) p.colorPhase -= 1;
-
-                if(p.y > ch + 10) { p.y = -10; p.x = Math.random() * cw; }
-                if(p.x > cw + 10) { p.x = -10; }
-                else if(p.x < -10) { p.x = cw + 10; }
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r * settings.snow.size, 0, Math.PI*2);
-                ctx.fillStyle = getTransitionColor(p.colorPhase);
-                ctx.fill();
+            // Снег
+            if(settings.snowEnabled) {
+                ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                for(let i=0; i<settings.snow.count; i++) {
+                    const p = particles[i];
+                    p.y += p.speed * settings.snow.speed;
+                    if(p.y > ch) p.y = -10;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+                }
             }
 
             requestAnimationFrame(animate);
         }
 
-        // Запуск
-        loadSavedSettings();
-        initSnow();
+        // Старт
+        renderFriends();
         animate();
     </script>
 </body>
