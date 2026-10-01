@@ -14,8 +14,8 @@
             --bg-color: #050507;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --glass-bg: rgba(15, 17, 26, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(15, 17, 26, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --card-radius: 20px;
         }
 
@@ -48,9 +48,8 @@
             width: 100vw;
             height: 100vh;
             z-index: 0;
-            cursor: grab;
+            touch-action: none;
         }
-        #bg-canvas:active { cursor: grabbing; }
 
         /* UI Container */
         .container {
@@ -60,10 +59,10 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
-        /* Capsule Pill Header (Капсульный Цилиндр Профиля) */
+        /* Top Pill Header */
         .top-pill-header {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -82,15 +81,15 @@
             gap: 12px;
         }
         .avatar-circle {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 18px;
+            font-size: 17px;
             color: #fff;
             border: 2px solid rgba(255, 255, 255, 0.2);
             overflow: hidden;
@@ -106,16 +105,14 @@
             flex-direction: column;
         }
         .user-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.5px;
         }
         .user-status {
             font-size: 10px;
             font-weight: 700;
             color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
         }
         .brand-badge {
             font-size: 11px;
@@ -137,7 +134,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
         }
         .card-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             margin-bottom: 12px;
             display: flex;
@@ -145,13 +142,19 @@
             gap: 8px;
         }
 
-        /* Tabs Animation */
-        .tab-content { display: none; flex-direction: column; gap: 14px; animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-        .tab-content.active { display: flex; }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Smooth Tab Animations */
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .tab-content.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Tariff Cards */
@@ -159,37 +162,45 @@
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 14px;
-            padding: 14px;
+            padding: 12px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
         }
         .tariff-card:hover, .tariff-card.active-tariff {
-            transform: scale(1.02);
-            background: rgba(139, 92, 246, 0.12);
+            background: rgba(139, 92, 246, 0.15);
             border-color: var(--primary);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.25);
         }
-        .tariff-name { font-size: 15px; font-weight: 600; }
+        .tariff-name { font-size: 14px; font-weight: 600; }
         .tariff-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-        .tariff-price { font-size: 17px; font-weight: 800; color: #fff; }
+        .tariff-price { font-size: 16px; font-weight: 800; color: #fff; }
 
-        /* Form Inputs & Selects */
+        /* Dark Selects & Inputs Fix (Глаза больше не режет!) */
         input[type="text"], select {
             width: 100%;
-            background: rgba(10, 11, 16, 0.7);
-            border: 1px solid var(--glass-border);
-            color: #fff;
+            background: rgba(20, 22, 34, 0.85) !important;
+            color: #f8fafc !important;
+            border: 1px solid var(--glass-border) !important;
             padding: 12px 14px;
             border-radius: 12px;
             outline: none;
             font-size: 13px;
-            transition: border-color 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 14px center !important;
+            background-size: 15px !important;
+        }
+        select option {
+            background-color: #0f111a !important;
+            color: #f8fafc !important;
+            padding: 10px;
         }
         input[type="text"]:focus, select:focus {
-            border-color: var(--primary);
+            border-color: var(--primary) !important;
         }
 
         /* Buttons */
@@ -199,7 +210,7 @@
             border: none;
             border-radius: 12px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -210,7 +221,7 @@
         .btn-glow {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: #fff;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
         .btn-glow:active { transform: scale(0.98); }
         .btn-secondary {
@@ -218,14 +229,13 @@
             color: var(--text-main);
             border: 1px solid var(--glass-border);
         }
-        .btn-secondary:active { background: rgba(255, 255, 255, 0.12); }
         .btn-google {
-            background: #4285F4;
+            background: #3b79db;
             color: #fff;
             font-weight: 600;
         }
 
-        /* Sliders & Color Pickers */
+        /* Sliders */
         .setting-group { margin-bottom: 12px; }
         .setting-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         input[type="range"] {
@@ -242,33 +252,33 @@
             background: none; cursor: pointer;
         }
 
-        /* Bottom Nav Bar */
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 11, 16, 0.85);
+            background: rgba(10, 11, 16, 0.9);
             backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
             padding: 10px 0 20px 0;
             z-index: 100;
+            transition: transform 0.3s ease;
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 3px;
             color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer;
-            transition: color 0.25s;
+            transition: color 0.2s;
         }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 19px; transition: transform 0.25s; }
-        .nav-item.active .nav-icon { transform: translateY(-2px); }
+        .nav-icon { font-size: 18px; }
 
         /* Preview Floating Banner */
         #exitPreview {
-            display: none; position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 30px;
-            color: #fff; z-index: 200; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-            font-size: 13px; font-weight: 600;
+            display: none; position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 17, 26, 0.85); padding: 10px 22px; border-radius: 30px;
+            color: #fff; z-index: 200; border: 1px solid var(--glass-border); backdrop-filter: blur(12px);
+            font-size: 12px; font-weight: 600; box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -295,7 +305,7 @@
             <div class="brand-badge">EASYWIN</div>
         </div>
 
-        <!-- TAB 1: HOME (Главное Меню) -->
+        <!-- TAB 1: HOME -->
         <div id="tab-home" class="tab-content active">
             <div class="card">
                 <div class="card-title">🔥 Быстрый доступ к тарифам</div>
@@ -320,28 +330,28 @@
             </div>
         </div>
 
-        <!-- TAB 2: STORE & PETS (Магазин и Питомцы) -->
+        <!-- TAB 2: STORE -->
         <div id="tab-store" class="tab-content">
             <div class="card">
                 <div class="card-title">🛒 Подписка EasyWin</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div class="tariff-card active-tariff" onclick="selectTariff(this, '1 мес', 180)">
+                    <div class="tariff-card active-tariff" onclick="selectTariff(this)">
                         <div><div class="tariff-name">1 Месяц</div></div>
                         <div class="tariff-price">180 ₽</div>
                     </div>
-                    <div class="tariff-card" onclick="selectTariff(this, '2 мес', 400)">
+                    <div class="tariff-card" onclick="selectTariff(this)">
                         <div><div class="tariff-name">2 Месяца</div></div>
                         <div class="tariff-price">400 ₽</div>
                     </div>
-                    <div class="tariff-card" onclick="selectTariff(this, '3 мес', 799)">
+                    <div class="tariff-card" onclick="selectTariff(this)">
                         <div><div class="tariff-name">3 Месяца</div></div>
                         <div class="tariff-price">799 ₽</div>
                     </div>
                 </div>
 
                 <div style="margin-top: 14px;">
-                    <label style="font-size: 11px; color: var(--text-muted);">Способ оплаты:</label>
-                    <select id="paymentMethod" style="margin-top: 4px;">
+                    <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px;">Способ оплаты:</label>
+                    <select id="paymentMethod">
                         <option value="sbp">💳 Карта / СБП (Банки РФ)</option>
                         <option value="crypto">🪙 Криптовалюта (USDT / TON)</option>
                         <option value="stars">⭐ Telegram Stars</option>
@@ -353,45 +363,32 @@
 
             <div class="card">
                 <div class="card-title">🐾 Питомцы в чите (In-Game Pets)</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Питомцы будут ходить или летать вокруг вас прямо в Майнкрафте!</p>
-                
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <div class="tariff-card">
-                        <div>
-                            <div class="tariff-name">🦊 Лисёнок Winny</div>
-                            <div class="tariff-sub">Летает рядом с вами</div>
-                        </div>
-                        <button class="btn btn-secondary" style="width: auto; padding: 6px 14px; font-size: 12px;" onclick="buyPet('Winny', 150)">150 ₽</button>
+                        <div><div class="tariff-name">🦊 Лисёнок Winny</div><div class="tariff-sub">Летает рядом с вами</div></div>
+                        <button class="btn btn-secondary" style="width: auto; padding: 6px 14px;" onclick="buyPet('Winny')">150 ₽</button>
                     </div>
                     <div class="tariff-card">
-                        <div>
-                            <div class="tariff-name">🐉 Кибер-Дракон</div>
-                            <div class="tariff-sub">Анимированное свечение</div>
-                        </div>
-                        <button class="btn btn-secondary" style="width: auto; padding: 6px 14px; font-size: 12px;" onclick="buyPet('Dragon', 300)">300 ₽</button>
+                        <div><div class="tariff-name">🐉 Кибер-Дракон</div><div class="tariff-sub">Анимированное свечение</div></div>
+                        <button class="btn btn-secondary" style="width: auto; padding: 6px 14px;" onclick="buyPet('Dragon')">300 ₽</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: SETTINGS & FX (Настройки, Привязка и Фон) -->
+        <!-- TAB 3: SETTINGS & FX -->
         <div id="tab-settings" class="tab-content">
-            <!-- Активация ключа -->
             <div class="card">
                 <div class="card-title">🔑 Активация ключа доступа</div>
                 <input type="text" id="keyInput" placeholder="EW-XXXX-XXXX-XXXX" style="margin-bottom: 10px;">
                 <button class="btn btn-glow" onclick="activateKey()">Активировать ключ</button>
             </div>
 
-            <!-- Google Синхронизация -->
             <div class="card">
                 <div class="card-title">🌐 Авторизация</div>
-                <button class="btn btn-google" onclick="loginGoogle()">
-                    <span>Войти через Google</span>
-                </button>
+                <button class="btn btn-google" onclick="loginGoogle()">Войти через Google</button>
             </div>
 
-            <!-- HWID & Язык -->
             <div class="card">
                 <div class="card-title">⚙️ Системные параметры</div>
                 
@@ -419,22 +416,22 @@
                 </div>
             </div>
 
-            <!-- Настройки Кастомного Фона -->
             <button class="btn btn-secondary" onclick="togglePreview()">👁 Предпросмотр (Скрыть UI)</button>
 
+            <!-- Снег -->
             <div class="card">
                 <div class="card-title">❄️ Настройка снега</div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Количество снежинок</span> <span id="valCount">150</span></div>
-                    <input type="range" id="sCount" min="0" max="500" value="150">
+                    <div class="setting-header"><span>Количество снежинок</span> <span id="valCount">120</span></div>
+                    <input type="range" id="sCount" min="0" max="350" value="120">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Скорость падения</span> <span id="valSpeed">2.0</span></div>
-                    <input type="range" id="sSpeed" min="0.1" max="10" step="0.1" value="2.0">
+                    <input type="range" id="sSpeed" min="0.1" max="8" step="0.1" value="2.0">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Размер частиц</span> <span id="valSize">2.5</span></div>
-                    <input type="range" id="sSize" min="0.5" max="10" step="0.1" value="2.5">
+                    <input type="range" id="sSize" min="0.5" max="8" step="0.1" value="2.5">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Угол наклона</span> <span id="valAngle">0°</span></div>
@@ -445,7 +442,7 @@
                     <input type="range" id="sWind" min="-5" max="5" step="0.1" value="0">
                 </div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Градиент палитры (3 цвета)</span></div>
+                    <div class="setting-header"><span>Градиент палитры</span></div>
                     <div class="color-pickers">
                         <input type="color" id="sC1" value="#ffffff">
                         <input type="color" id="sC2" value="#8b5cf6">
@@ -454,21 +451,21 @@
                 </div>
             </div>
 
+            <!-- Чёрная Дыра -->
             <div class="card">
-                <div class="card-title">🌌 Интерактивная Черная Дыра</div>
-                <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">Вращайте аккреционный диск свайпами по экрану!</p>
+                <div class="card-title">🌌 Черная Дыра</div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Масштаб</span> <span id="valBhScale">1.0</span></div>
-                    <input type="range" id="bhScale" min="0.1" max="3" step="0.1" value="1.0">
+                    <input type="range" id="bhScale" min="0.2" max="2.5" step="0.1" value="1.0">
                 </div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Яркость свечения</span> <span id="valBhBright">1.0</span></div>
+                    <div class="setting-header"><span>Яркость</span> <span id="valBhBright">1.0</span></div>
                     <input type="range" id="bhBright" min="0" max="2" step="0.1" value="1.0">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Смещение X / Y</span></div>
-                    <input type="range" id="bhX" min="-200" max="200" value="0" style="margin-bottom: 8px;">
-                    <input type="range" id="bhY" min="-300" max="300" value="0">
+                    <input type="range" id="bhX" min="-180" max="180" value="0" style="margin-bottom: 8px;">
+                    <input type="range" id="bhY" min="-250" max="250" value="0">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Цвет энергии</span></div>
@@ -477,21 +474,21 @@
             </div>
         </div>
 
-        <!-- TAB 4: PROFILE (Профиль & Кастомизация) -->
+        <!-- TAB 4: PROFILE -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
                 <div class="card-title">🎨 Оформление профиля</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Настройте рамки аватарки, кастомные титулы и стиль карточки.</p>
-                <button class="btn btn-secondary" onclick="tg.showAlert('Эксклюзивные рамки будут доступны в следующем обновлении!')">Выбрать рамку аватарки</button>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Персонализируйте внешний вид профиля и статус аккаунта.</p>
+                <button class="btn btn-secondary" onclick="tg.showAlert('Эксклюзивные кастомизации будут доступны скоро!')">Выбрать рамку профиля</button>
             </div>
         </div>
 
-        <!-- TAB 5: REFERRALS & BONUSES (Рефералы и Бонусы) -->
+        <!-- TAB 5: REFERRALS -->
         <div id="tab-ref" class="tab-content">
             <div class="card">
                 <div class="card-title">👥 Реферальная система</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Приглашайте друзей и получайте **15%** от каждой их покупки на свой баланс!</p>
-                <button class="btn btn-glow" onclick="copyRefLink()">🔗 Скопировать реферальную ссылку</button>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Получайте **15%** от всех покупок ваших друзей!</p>
+                <button class="btn btn-glow" onclick="copyRefLink()">🔗 Скопировать ссылку</button>
             </div>
 
             <div class="card">
@@ -502,7 +499,7 @@
 
     </div>
 
-    <!-- Нижнее Навигационное Меню -->
+    <!-- Bottom Nav -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this)">
             <span class="nav-icon">🏠</span>
@@ -529,59 +526,75 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.setHeaderColor('#050507');
 
-        // Инициализация Telegram данных
+        // Инициализация Telegram
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
             document.getElementById('userName').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             if (user.photo_url) {
-                document.getElementById('avatarContainer').innerHTML = `<img src="${user.photo_url}" alt="Avatar">`;
+                document.getElementById('avatarContainer').innerHTML = `<img src="${user.photo_url}">`;
             } else {
                 document.getElementById('avatarText').innerText = user.first_name.charAt(0).toUpperCase();
             }
         }
 
-        // Переключение Табов
+        // Переключение Вкладок Без Багов
         function switchTab(tabName, el) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            const currentTab = document.querySelector('.tab-content.active');
+            const targetTab = document.getElementById('tab-' + tabName);
+
+            if (currentTab === targetTab) return;
+
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            
-            document.getElementById('tab-' + tabName).classList.add('active');
             if (el) el.classList.add('active');
+
+            if (currentTab) {
+                currentTab.style.opacity = '0';
+                currentTab.style.transform = 'translateY(8px)';
+                setTimeout(() => {
+                    currentTab.classList.remove('active');
+                    targetTab.classList.add('active');
+                    setTimeout(() => {
+                        targetTab.style.opacity = '1';
+                        targetTab.style.transform = 'translateY(0)';
+                    }, 20);
+                }, 150);
+            } else {
+                targetTab.classList.add('active');
+                targetTab.style.opacity = '1';
+                targetTab.style.transform = 'translateY(0)';
+            }
         }
 
-        // Выбор тарифа
-        function selectTariff(el, name, price) {
+        function selectTariff(el) {
             document.querySelectorAll('#tab-store .tariff-card').forEach(c => c.classList.remove('active-tariff'));
             el.classList.add('active-tariff');
         }
 
-        // Режим предпросмотра фона
+        // Режим предпросмотра
         let isPreview = false;
         function togglePreview() {
             isPreview = !isPreview;
-            document.getElementById('ui-container').style.opacity = isPreview ? '0' : '1';
-            document.getElementById('ui-container').style.pointerEvents = isPreview ? 'none' : 'all';
-            document.querySelector('.bottom-nav').style.transform = isPreview ? 'translateY(100px)' : 'translateY(0)';
-            document.getElementById('exitPreview').style.display = isPreview ? 'block' : 'none';
-        }
-        document.getElementById('bg-canvas').addEventListener('click', () => { if(isPreview) togglePreview(); });
+            const ui = document.getElementById('ui-container');
+            const nav = document.querySelector('.bottom-nav');
+            const btn = document.getElementById('exitPreview');
 
-        // Интерактивные функции
-        function activateKey() {
-            const val = document.getElementById('keyInput').value.trim();
-            if(!val) return tg.showAlert("⚠️️ Введите ключ доступа!");
-            tg.showAlert("🔍 Проверка ключа " + val + "...");
+            ui.style.opacity = isPreview ? '0' : '1';
+            ui.style.pointerEvents = isPreview ? 'none' : 'all';
+            nav.style.transform = isPreview ? 'translateY(100px)' : 'translateY(0)';
+            btn.style.display = isPreview ? 'block' : 'none';
         }
-        function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher стартует!"); }
-        function buySubscription() { tg.showAlert("💳 Переход к оплате..."); }
-        function buyPet(name, price) { tg.showAlert("🐾 Питомец " + name + " добавлен!"); }
+
+        // Действия
+        function activateKey() { tg.showAlert("🔍 Проверка ключа..."); }
+        function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher!"); }
+        function buySubscription() { tg.showAlert("💳 Оплата подписки..."); }
+        function buyPet(name) { tg.showAlert("🐾 Питомец " + name + " куплен!"); }
         function claimDailyReward() { tg.showAlert("🎁 Вы получили +10 монет EasyWin!"); }
-        function loginGoogle() { tg.showAlert("🌐 Окно авторизации Google открывается..."); }
-        function resetHwid() { tg.showAlert("🔄 Запрос на сброс HWID отправлен!"); }
-        function copyRefLink() { tg.showAlert("🔗 Ваша реферальная ссылка скопирована!"); }
-        function changeLanguage() { tg.showAlert("🌐 Язык интерфейса обновлен!"); }
+        function loginGoogle() { tg.showAlert("🌐 Окно Google..."); }
+        function resetHwid() { tg.showAlert("🔄 Запрос сброса HWID!"); }
+        function copyRefLink() { tg.showAlert("🔗 Ссылка скопирована!"); }
+        function changeLanguage() { saveSettings(); tg.showAlert("🌐 Язык сохранен!"); }
 
         function changeTheme() {
             const val = document.getElementById('themeSelect').value;
@@ -596,9 +609,10 @@
                 root.style.setProperty('--primary', '#8b5cf6');
                 root.style.setProperty('--secondary', '#3b82f6');
             }
+            saveSettings();
         }
 
-        // --- CANVAS ENGINE (Снег и Чёрная Дыра) ---
+        // --- ДВИЖОК CANVAS (ОПТИМИЗИРОВАННЫЙ С LOCALSTORAGE) ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let cw, ch;
@@ -610,25 +624,80 @@
         window.addEventListener('resize', resize);
         resize();
 
+        // Структура настроек
         const settings = {
-            snow: { count: 150, speed: 2.0, size: 2.5, angle: 0, wind: 0, c1: '#ffffff', c2: '#8b5cf6', c3: '#3b82f6' },
-            bh: { scale: 1.0, bright: 1.0, x: 0, y: 0, color: '#8b5cf6', rotationZ: 0.2, rotationX: 1.2 }
+            snow: { count: 120, speed: 2.0, size: 2.5, angle: 0, wind: 0, c1: '#ffffff', c2: '#8b5cf6', c3: '#3b82f6' },
+            bh: { scale: 1.0, bright: 1.0, x: 0, y: 0, color: '#8b5cf6', rotationZ: 0.2, rotationX: 1.2 },
+            theme: 'purple',
+            lang: 'ru'
         };
+
+        // Загрузка из LocalStorage
+        function loadSavedSettings() {
+            const saved = localStorage.getItem('easywin_app_settings');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.snow) Object.assign(settings.snow, parsed.snow);
+                    if (parsed.bh) Object.assign(settings.bh, parsed.bh);
+                    if (parsed.theme) settings.theme = parsed.theme;
+                    if (parsed.lang) settings.lang = parsed.lang;
+                } catch(e) {}
+            }
+            syncUIWithSettings();
+        }
+
+        // Сохранение в LocalStorage
+        function saveSettings() {
+            localStorage.setItem('easywin_app_settings', JSON.stringify(settings));
+        }
+
+        function syncUIWithSettings() {
+            document.getElementById('sCount').value = settings.snow.count;
+            document.getElementById('valCount').innerText = settings.snow.count;
+            document.getElementById('sSpeed').value = settings.snow.speed;
+            document.getElementById('valSpeed').innerText = settings.snow.speed;
+            document.getElementById('sSize').value = settings.snow.size;
+            document.getElementById('valSize').innerText = settings.snow.size;
+            document.getElementById('sAngle').value = settings.snow.angle;
+            document.getElementById('valAngle').innerText = settings.snow.angle + '°';
+            document.getElementById('sWind').value = settings.snow.wind;
+            document.getElementById('valWind').innerText = settings.snow.wind;
+            document.getElementById('sC1').value = settings.snow.c1;
+            document.getElementById('sC2').value = settings.snow.c2;
+            document.getElementById('sC3').value = settings.snow.c3;
+
+            document.getElementById('bhScale').value = settings.bh.scale;
+            document.getElementById('valBhScale').innerText = settings.bh.scale;
+            document.getElementById('bhBright').value = settings.bh.bright;
+            document.getElementById('valBhBright').innerText = settings.bh.bright;
+            document.getElementById('bhX').value = settings.bh.x;
+            document.getElementById('bhY').value = settings.bh.y;
+            document.getElementById('bhColor').value = settings.bh.color;
+
+            document.getElementById('themeSelect').value = settings.theme;
+            document.getElementById('langSelect').value = settings.lang;
+            changeTheme();
+        }
 
         const bindSlider = (id, obj, key, valId, isFloat = false) => {
             const el = document.getElementById(id);
-            const valEl = document.getElementById(valId);
+            const valEl = valId ? document.getElementById(valId) : null;
             if(!el) return;
             el.addEventListener('input', (e) => {
                 const val = isFloat ? parseFloat(e.target.value) : parseInt(e.target.value);
                 settings[obj][key] = val;
                 if(valEl) valEl.innerText = val + (id === 'sAngle' ? '°' : '');
                 if(id === 'sCount') initSnow();
+                saveSettings();
             });
         };
         const bindColor = (id, obj, key) => {
             const el = document.getElementById(id);
-            if(el) el.addEventListener('input', (e) => settings[obj][key] = e.target.value);
+            if(el) el.addEventListener('input', (e) => {
+                settings[obj][key] = e.target.value;
+                saveSettings();
+            });
         };
 
         bindSlider('sCount', 'snow', 'count', 'valCount');
@@ -646,23 +715,34 @@
         bindSlider('bhY', 'bh', 'y', null);
         bindColor('bhColor', 'bh', 'color');
 
-        // Вращение Чёрной Дыры
-        let isDragging = false, lastX, lastY;
-        canvas.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
-        canvas.addEventListener('touchstart', e => { isDragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; });
+        // Вращение Чёрной Дыры (Исправлен баг пропажи)
+        let isDragging = false, lastX = 0, lastY = 0;
         
-        const handleMove = (x, y) => {
+        const startDrag = (x, y) => { isDragging = true; lastX = x; lastY = y; };
+        const moveDrag = (x, y, e) => {
             if(!isDragging) return;
-            const dx = x - lastX; const dy = y - lastY;
-            settings.bh.rotationZ += dx * 0.01;
-            settings.bh.rotationX -= dy * 0.01;
+            if (e && e.cancelable) e.preventDefault();
+            const dx = x - lastX; 
+            const dy = y - lastY;
+            settings.bh.rotationZ += dx * 0.008;
+            settings.bh.rotationX -= dy * 0.008;
             settings.bh.rotationX = Math.max(0.1, Math.min(Math.PI/1.5, settings.bh.rotationX));
             lastX = x; lastY = y;
+            saveSettings();
         };
-        canvas.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
-        canvas.addEventListener('touchmove', e => handleMove(e.touches[0].clientX, e.touches[0].clientY));
-        window.addEventListener('mouseup', () => isDragging = false);
-        window.addEventListener('touchend', () => isDragging = false);
+        const stopDrag = () => { isDragging = false; };
+
+        canvas.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+        canvas.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY, e));
+        window.addEventListener('mouseup', stopDrag);
+
+        canvas.addEventListener('touchstart', e => {
+            if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY);
+        }, {passive: false});
+        canvas.addEventListener('touchmove', e => {
+            if (e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY, e);
+        }, {passive: false});
+        window.addEventListener('touchend', stopDrag);
 
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -684,7 +764,7 @@
                 let p = (phase - 0.66) / 0.34;
                 r = c3.r + (c1.r - c3.r) * p; g = c3.g + (c1.g - c3.g) * p; b = c3.b + (c1.b - c3.b) * p;
             }
-            return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+            return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 0.85)`;
         }
 
         let particles = [];
@@ -700,38 +780,38 @@
                 });
             }
         }
-        initSnow();
 
+        // Анимация без lag-емких операций (60 FPS)
         function animate() {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, cw, ch);
 
-            // Чёрная дыра
+            // Рендер Черной Дыры
             const centerX = cw/2 + settings.bh.x;
             const centerY = ch/4 + settings.bh.y;
-            const baseRadius = 55 * settings.bh.scale;
+            const baseRadius = 50 * settings.bh.scale;
             
             ctx.save();
             ctx.translate(centerX, centerY);
             
-            const glow = ctx.createRadialGradient(0, 0, baseRadius*0.8, 0, 0, baseRadius*3.8);
+            // Свечение фона
+            const glow = ctx.createRadialGradient(0, 0, baseRadius*0.8, 0, 0, baseRadius*3.5);
             const bhRgb = hexToRgb(settings.bh.color);
-            glow.addColorStop(0, `rgba(${bhRgb.r}, ${bhRgb.g}, ${bhRgb.b}, ${0.4 * settings.bh.bright})`);
+            glow.addColorStop(0, `rgba(${bhRgb.r}, ${bhRgb.g}, ${bhRgb.b}, ${0.35 * settings.bh.bright})`);
             glow.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = glow;
             ctx.beginPath();
-            ctx.arc(0, 0, baseRadius*3.8, 0, Math.PI*2);
+            ctx.arc(0, 0, baseRadius*3.5, 0, Math.PI*2);
             ctx.fill();
 
+            // Вращающийся диск
             ctx.rotate(settings.bh.rotationZ);
             ctx.beginPath();
-            ctx.ellipse(0, 0, baseRadius*2.4, baseRadius*2.4 * Math.cos(settings.bh.rotationX), 0, 0, Math.PI*2);
-            ctx.strokeStyle = `rgba(${bhRgb.r}, ${bhRgb.g}, ${bhRgb.b}, ${0.8 * settings.bh.bright})`;
-            ctx.lineWidth = 14 * settings.bh.scale;
-            ctx.shadowBlur = 25 * settings.bh.bright;
-            ctx.shadowColor = settings.bh.color;
+            ctx.ellipse(0, 0, baseRadius*2.2, baseRadius*2.2 * Math.cos(settings.bh.rotationX), 0, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(${bhRgb.r}, ${bhRgb.g}, ${bhRgb.b}, ${0.85 * settings.bh.bright})`;
+            ctx.lineWidth = 12 * settings.bh.scale;
             ctx.stroke();
             
-            ctx.shadowBlur = 0;
             ctx.rotate(-settings.bh.rotationZ);
             ctx.beginPath();
             ctx.arc(0, 0, baseRadius, 0, Math.PI*2);
@@ -739,20 +819,21 @@
             ctx.fill();
             
             ctx.beginPath();
-            ctx.arc(0, 0, baseRadius + 2, 0, Math.PI*2);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.5 * settings.bh.bright})`;
-            ctx.lineWidth = 2;
+            ctx.arc(0, 0, baseRadius + 1.5, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * settings.bh.bright})`;
+            ctx.lineWidth = 1.5;
             ctx.stroke();
             
             ctx.restore();
 
-            // Снег
+            // Рендер Оптимизированного Снега
             const angleRad = settings.snow.angle * Math.PI / 180;
             const baseDirX = Math.sin(angleRad);
             const baseDirY = Math.cos(angleRad);
 
-            particles.forEach((p, i) => {
-                if(i >= settings.snow.count) return;
+            for(let i = 0; i < particles.length; i++) {
+                if(i >= settings.snow.count) break;
+                const p = particles[i];
 
                 p.x += (baseDirX * settings.snow.speed * p.speedMult) + settings.snow.wind;
                 p.y += (baseDirY * settings.snow.speed * p.speedMult);
@@ -767,14 +848,15 @@
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r * settings.snow.size, 0, Math.PI*2);
                 ctx.fillStyle = getTransitionColor(p.colorPhase);
-                ctx.shadowBlur = 6 * settings.snow.size;
-                ctx.shadowColor = ctx.fillStyle;
                 ctx.fill();
-                ctx.shadowBlur = 0;
-            });
+            }
 
             requestAnimationFrame(animate);
         }
+
+        // Запуск
+        loadSavedSettings();
+        initSnow();
         animate();
     </script>
 </body>
