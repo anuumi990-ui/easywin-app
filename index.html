@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EasyWin Client App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -10,185 +10,362 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
         }
         body {
-            background-color: #0F1015;
+            background: #0D0E12;
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
+            overflow-x: hidden;
         }
+
+        /* Анимированный фоновый градиент */
+        .bg-glow {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.25) 0%, rgba(0, 206, 201, 0.1) 50%, transparent 80%);
+            filter: blur(50px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Шапка бренда */
         .header {
             text-align: center;
             margin-top: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 5px;
         }
         .logo-text {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #6C5CE7, #00CEC9);
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #A29BFE 0%, #6C5CE7 50%, #00CEC9 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 25px rgba(108, 92, 231, 0.4);
         }
         .subtitle {
-            font-size: 12px;
-            color: #7C809B;
-            margin-top: 4px;
+            font-size: 11px;
+            color: #6C728E;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-top: 2px;
         }
-        .card {
-            background: #181922;
-            border: 1px solid #282A3A;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 360px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-        .user-info {
+
+        /* Карточка профиля */
+        .profile-card {
+            background: rgba(22, 24, 34, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 18px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
         }
-        .user-avatar {
-            width: 48px;
-            height: 48px;
+
+        .avatar-wrapper {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #6C5CE7;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             background: linear-gradient(135deg, #6C5CE7, #00CEC9);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 20px;
+            font-weight: 800;
+            font-size: 22px;
+            color: #FFF;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
         }
-        .user-details h3 {
-            font-size: 16px;
-            font-weight: 600;
+
+        .online-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #00CEC9;
+            border: 2px solid #0D0E12;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00CEC9;
         }
-        .status-badge {
-            display: inline-block;
-            font-size: 11px;
-            padding: 3px 8px;
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #FFFFFF;
+            line-height: 1.2;
+        }
+
+        .badges {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .badge-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 10px;
             border-radius: 20px;
-            background: rgba(108, 92, 231, 0.2);
+            background: rgba(108, 92, 231, 0.15);
             color: #A29BFE;
-            border: 1px solid #6C5CE7;
+            border: 1px solid rgba(108, 92, 231, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        /* Информационная карточка (HWID / Подписка) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-box {
+            background: rgba(22, 24, 34, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .info-title {
+            font-size: 10px;
+            color: #6C728E;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #00CEC9;
             margin-top: 4px;
         }
-        .input-group {
-            margin-top: 15px;
+
+        /* Карточка активации */
+        .action-card {
+            background: rgba(22, 24, 34, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-        .input-group label {
-            display: block;
+
+        .input-label {
             font-size: 12px;
-            color: #7C809B;
-            margin-bottom: 6px;
+            color: #A0A5BA;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
         }
+
         .key-input {
             width: 100%;
-            padding: 12px;
-            background: #0F1015;
-            border: 1px solid #282A3A;
-            border-radius: 10px;
+            padding: 14px;
+            background: rgba(13, 14, 18, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             color: #FFF;
             font-size: 14px;
             outline: none;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
+
         .key-input:focus {
             border-color: #6C5CE7;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
         }
+
+        /* Кнопки */
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             border: none;
-            border-radius: 12px;
-            font-weight: 600;
+            border-radius: 14px;
+            font-weight: 700;
             font-size: 14px;
             cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #6C5CE7, #00CEC9);
-            color: #FFF;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+
+        .btn-glow {
+            background: linear-gradient(135deg, #6C5CE7 0%, #00CEC9 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
         }
-        .btn-primary:active {
+
+        .btn-glow:active {
             transform: scale(0.98);
+            box-shadow: 0 2px 10px rgba(108, 92, 231, 0.2);
         }
+
         .btn-secondary {
-            background: #222430;
+            background: rgba(255, 255, 255, 0.05);
             color: #FFF;
-            border: 1px solid #282A3A;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .footer-note {
-            font-size: 11px;
-            color: #555870;
+
+        .btn-secondary:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            font-size: 10px;
+            color: #4A4E65;
             text-align: center;
-            margin-top: auto;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-text">EASYWIN</div>
-        <div class="subtitle">HIGH-TECH SOFTWARE SOLUTIONS</div>
-    </div>
+    <div class="bg-glow"></div>
 
-    <div class="card">
-        <div class="user-info">
-            <div class="user-avatar" id="avatar">U</div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-text">EASYWIN</div>
+            <div class="subtitle">HIGH-TECH SOFTWARE SOLUTIONS</div>
+        </div>
+
+        <!-- User Profile Card -->
+        <div class="profile-card">
+            <div class="avatar-wrapper" id="avatarContainer">
+                <div class="avatar-placeholder" id="avatarText">E</div>
+                <div class="online-status"></div>
+            </div>
             <div class="user-details">
-                <h3 id="username">Пользователь</h3>
-                <span class="status-badge" id="status">BETA TESTER</span>
+                <div class="user-name" id="userName">Загрузка...</div>
+                <div class="badges">
+                    <span class="badge-status" id="userRole">BETA TESTER</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="input-group">
-            <label for="key">Активация подписки EasyWin</label>
-            <input type="text" id="key" class="key-input" placeholder="EW-XXXX-XXXX-XXXX">
+        <!-- System Info Grid -->
+        <div class="info-grid">
+            <div class="info-box">
+                <div class="info-title">Статус HWID</div>
+                <div class="info-value" id="hwidStatus">НЕ ПРИВЯЗАН</div>
+            </div>
+            <div class="info-box">
+                <div class="info-title">Подписка</div>
+                <div class="info-value" id="subDays">FREE BETA</div>
+            </div>
         </div>
-        <button class="btn btn-primary" onclick="activateKey()">Активировать ключ</button>
-    </div>
 
-    <div class="card">
-        <button class="btn btn-secondary" onclick="downloadLauncher()">📥 Скачать EasyWin Launcher</button>
-    </div>
+        <!-- Key Activation Form -->
+        <div class="action-card">
+            <label class="input-label" for="keyInput">🔑 Активация ключа подписки</label>
+            <input type="text" id="keyInput" class="key-input" placeholder="EW-XXXX-XXXX-XXXX">
+            <button class="btn btn-glow" onclick="activateKey()">
+                <span>Активировать EasyWin</span>
+            </button>
+        </div>
 
-    <div class="footer-note">
-        EasyWin System v1.0.0 • Protected by HWID
+        <!-- Download Section -->
+        <div class="action-card" style="padding: 12px;">
+            <button class="btn btn-secondary" style="margin-top: 0;" onclick="downloadLauncher()">
+                <span>📥 Скачать EasyWin Launcher</span>
+            </button>
+        </div>
+
+        <div class="footer-text">
+            EASYWIN CLIENT • SYSTEM v1.0.0 • HWID SECURED
+        </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем на полный экран
+        tg.expand();
 
-        // Загружаем данные пользователя из Telegram
+        // Загрузка данных пользователя из Telegram
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             const user = tg.initDataUnsafe.user;
-            document.getElementById('username').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-            document.getElementById('avatar').innerText = user.first_name.charAt(0).toUpperCase();
+            const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            
+            document.getElementById('userName').innerText = fullName;
+            
+            // Загрузка аватарки из Telegram
+            if (user.photo_url) {
+                const container = document.getElementById('avatarContainer');
+                container.innerHTML = `
+                    <img src="${user.photo_url}" class="avatar-img" alt="Avatar">
+                    <div class="online-status"></div>
+                `;
+            } else {
+                document.getElementById('avatarText').innerText = user.first_name.charAt(0).toUpperCase();
+            }
+        } else {
+            document.getElementById('userName').innerText = "Developer Mode";
         }
 
         function activateKey() {
-            const key = document.getElementById('key').value.trim();
+            const key = document.getElementById('keyInput').value.trim();
             if (!key) {
-                tg.showAlert("Пожалуйста, введите ключ доступа!");
+                tg.showAlert("⚠️ Пожалуйста, введите ключ доступа!");
                 return;
             }
-            tg.showAlert("Проверка ключа: " + key + "\n(Система активации в разработке)");
+            tg.showAlert("🔍 Проверка ключа: " + key + "\n\nСистема активации связывается с сервером EasyWin...");
         }
 
         function downloadLauncher() {
-            tg.showAlert("Загрузка лаунчера станет доступна после релиза Beta-версии!");
+            tg.showAlert("🚀 Скачивание лаунчера станет доступно сразу после закрытого Beta-тестирования!");
         }
     </script>
 </body>
