@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyWin Client App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0F1015;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6C5CE7, #00CEC9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            font-size: 12px;
+            color: #7C809B;
+            margin-top: 4px;
+        }
+        .card {
+            background: #181922;
+            border: 1px solid #282A3A;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 360px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6C5CE7, #00CEC9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .user-details h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(108, 92, 231, 0.2);
+            color: #A29BFE;
+            border: 1px solid #6C5CE7;
+            margin-top: 4px;
+        }
+        .input-group {
+            margin-top: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: #7C809B;
+            margin-bottom: 6px;
+        }
+        .key-input {
+            width: 100%;
+            padding: 12px;
+            background: #0F1015;
+            border: 1px solid #282A3A;
+            border-radius: 10px;
+            color: #FFF;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .key-input:focus {
+            border-color: #6C5CE7;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #6C5CE7, #00CEC9);
+            color: #FFF;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        .btn-secondary {
+            background: #222430;
+            color: #FFF;
+            border: 1px solid #282A3A;
+        }
+        .footer-note {
+            font-size: 11px;
+            color: #555870;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-text">EASYWIN</div>
+        <div class="subtitle">HIGH-TECH SOFTWARE SOLUTIONS</div>
+    </div>
+
+    <div class="card">
+        <div class="user-info">
+            <div class="user-avatar" id="avatar">U</div>
+            <div class="user-details">
+                <h3 id="username">Пользователь</h3>
+                <span class="status-badge" id="status">BETA TESTER</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="input-group">
+            <label for="key">Активация подписки EasyWin</label>
+            <input type="text" id="key" class="key-input" placeholder="EW-XXXX-XXXX-XXXX">
+        </div>
+        <button class="btn btn-primary" onclick="activateKey()">Активировать ключ</button>
+    </div>
+
+    <div class="card">
+        <button class="btn btn-secondary" onclick="downloadLauncher()">📥 Скачать EasyWin Launcher</button>
+    </div>
+
+    <div class="footer-note">
+        EasyWin System v1.0.0 • Protected by HWID
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Разворачиваем на полный экран
+
+        // Загружаем данные пользователя из Telegram
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            document.getElementById('username').innerText = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+            document.getElementById('avatar').innerText = user.first_name.charAt(0).toUpperCase();
+        }
+
+        function activateKey() {
+            const key = document.getElementById('key').value.trim();
+            if (!key) {
+                tg.showAlert("Пожалуйста, введите ключ доступа!");
+                return;
+            }
+            tg.showAlert("Проверка ключа: " + key + "\n(Система активации в разработке)");
+        }
+
+        function downloadLauncher() {
+            tg.showAlert("Загрузка лаунчера станет доступна после релиза Beta-версии!");
+        }
+    </script>
+</body>
+</html>
