@@ -11,10 +11,10 @@
         :root {
             --primary: #8b5cf6;
             --secondary: #3b82f6;
-            --bg-color: #050507;
+            --bg-color: #06070a;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --glass-bg: rgba(15, 17, 26, 0.75);
+            --glass-bg: rgba(18, 20, 32, 0.85);
             --glass-border: rgba(255, 255, 255, 0.12);
             --card-radius: 20px;
             --success: #2ed573;
@@ -41,6 +41,7 @@
             overflow-x: hidden;
         }
 
+        /* WebGL Background Canvas */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -51,14 +52,14 @@
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 410px;
             z-index: 1;
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-        /* Top Header */
+        /* Top Profile Capsule Header */
         .top-header {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -69,28 +70,30 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
         .user-info { display: flex; align-items: center; gap: 12px; }
         .avatar-circle {
-            width: 42px; height: 42px;
+            width: 44px; height: 44px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-size: 17px; color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-weight: 800; font-size: 18px; color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.25);
             overflow: hidden; flex-shrink: 0;
         }
-        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-circle img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+        }
         .user-details { display: flex; flex-direction: column; }
-        .user-name { font-size: 14px; font-weight: 700; }
+        .user-name { font-size: 15px; font-weight: 700; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .user-mc { font-size: 11px; color: var(--text-muted); }
         .brand-badge {
             font-size: 11px; font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
         /* Cards */
@@ -101,7 +104,7 @@
             border: 1px solid var(--glass-border);
             border-radius: var(--card-radius);
             padding: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
         .card-title {
             font-size: 14px; font-weight: 700;
@@ -117,7 +120,7 @@
         }
         .tab-content.active { display: flex; opacity: 1; transform: translateY(0); }
 
-        /* Tariff Cards */
+        /* Tariffs */
         .tariff-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -126,16 +129,16 @@
             cursor: pointer; transition: all 0.2s ease;
         }
         .tariff-card:hover, .tariff-card.active-tariff {
-            background: rgba(139, 92, 246, 0.15); border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.18); border-color: var(--primary);
         }
         .tariff-name { font-size: 14px; font-weight: 600; }
         .tariff-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
         .tariff-price { font-size: 15px; font-weight: 800; color: #fff; }
 
-        /* Form Controls */
+        /* Dark Inputs & Selects (Не режет глаза) */
         input[type="text"], select {
             width: 100%;
-            background: rgba(20, 22, 34, 0.85) !important;
+            background: #121420 !important;
             color: #f8fafc !important;
             border: 1px solid var(--glass-border) !important;
             padding: 12px 14px; border-radius: 12px; outline: none; font-size: 13px;
@@ -145,7 +148,8 @@
             background-position: right 14px center !important;
             background-size: 15px !important;
         }
-        select option { background-color: #0f111a !important; color: #f8fafc !important; }
+        select option { background-color: #0d0f17 !important; color: #f8fafc !important; }
+        input[type="text"]:focus, select:focus { border-color: var(--primary) !important; }
 
         /* Buttons */
         .btn {
@@ -155,7 +159,7 @@
         }
         .btn-glow {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            color: #fff; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
         }
         .btn-glow:active { transform: scale(0.98); }
         .btn-secondary {
@@ -164,14 +168,12 @@
         }
         .btn-google { background: #3b79db; color: #fff; }
 
-        /* Toggle Switches */
+        /* Switches */
         .switch-container {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
         }
         .switch-label { font-size: 13px; font-weight: 600; }
-        .switch {
-            position: relative; display: inline-block; width: 44px; height: 24px;
-        }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
@@ -189,14 +191,14 @@
         .setting-group { margin-bottom: 12px; }
         .setting-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         input[type="range"] {
-            width: 100%; accent-color: var(--primary); height: 4px;
+            width: 100%; accent-color: var(--primary); height: 5px;
             background: rgba(255,255,255,0.1); border-radius: 4px; outline: none;
         }
 
         /* Bottom Nav */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 11, 16, 0.92);
+            background: rgba(10, 11, 16, 0.94);
             backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
             display: flex; justify-content: space-around;
@@ -210,33 +212,21 @@
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 18px; }
 
-        /* Friend Cards & Badges */
+        /* Friend Items */
         .friend-item {
             display: flex; align-items: center; justify-content: space-between;
             padding: 10px 12px; background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin-bottom: 8px;
-            cursor: pointer; transition: background 0.2s;
         }
-        .friend-item:hover { background: rgba(255,255,255,0.07); }
-        .friend-status { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .status-online { background: #2ed573; box-shadow: 0 0 8px #2ed573; }
-        .status-offline { background: #747d8c; }
-
-        .badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .badge-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px;
-        }
-        .badge-icon { font-size: 22px; }
 
         /* Modal Popups */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
             z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px;
         }
         .modal-body {
-            background: #0f111a; border: 1px solid var(--glass-border);
+            background: #0d0f17; border: 1px solid var(--glass-border);
             border-radius: var(--card-radius); width: 100%; max-width: 360px;
             padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 14px;
         }
@@ -252,11 +242,11 @@
         <div class="top-header">
             <div class="user-info">
                 <div class="avatar-circle" id="avatarContainer">
-                    <span id="avatarText">E</span>
+                    <span id="avatarText">U</span>
                 </div>
                 <div class="user-details">
-                    <span class="user-name" id="userName">匚OÐE_ßƦEAKEƦ</span>
-                    <span class="user-mc" id="userMcDisplay">MC: Not Set</span>
+                    <span class="user-name" id="userName">User</span>
+                    <span class="user-mc" id="userMcDisplay">MC: Не привязан</span>
                 </div>
             </div>
             <div class="brand-badge">EASYWIN</div>
@@ -267,7 +257,7 @@
             <div class="card">
                 <div class="card-title"><span id="txt-about-title">🚀 О клиенте EasyWin</span></div>
                 <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;" id="txt-about-desc">
-                    <b>EasyWin Client</b> — передовой чит-клиент и лаунчер нового поколения для Minecraft. Оборудован гибким HUD, умным Aimbot/TriggerBot, обходит популярные античиты (AAC, Matrix, Grim), гарантируя максимальный FPS и стабильность.
+                    <b>EasyWin Client</b> — передовой чит-клиент и лаунчер нового поколения для Minecraft. Оборудован гибким HUD, умным Aimbot/TriggerBot, обходит популярные античиты (AAC, Matrix, Grim), гарантируя высокий FPS и стабильность.
                 </p>
                 <button class="btn btn-glow" onclick="downloadLauncher()" id="txt-btn-download">📥 Скачать EasyWin Launcher</button>
             </div>
@@ -311,7 +301,7 @@
                 <div class="card-title">🐾 Питомцы в чите (In-Game Pets)</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <div class="tariff-card" onclick="openPayModal('Питомец Лисёнок Winny', 150)">
-                        <div><div class="tariff-name">🦊 Лисёнок Winny</div><div class="tariff-sub">3D-модель летает рядом</div></div>
+                        <div><div class="tariff-name">🦊 Лисёнок Winny</div><div class="tariff-sub">3D-модель рядом в игре</div></div>
                         <div class="tariff-price">150 ₽</div>
                     </div>
                     <div class="tariff-card" onclick="openPayModal('Питомец Кибер-Дракон', 300)">
@@ -322,15 +312,16 @@
             </div>
         </div>
 
-        <!-- TAB 3: FRIENDS (NEW!) -->
+        <!-- TAB 3: FRIENDS -->
         <div id="tab-friends" class="tab-content">
             <div class="card">
                 <div class="card-title">
                     <span>👥 Ваши друзья</span>
                     <button class="btn btn-glow" style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="openAddFriendModal()">+ Добавить</button>
                 </div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">+15 ₽ за каждого приглашенного друга на ваш баланс!</p>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Список ваших подтвержденных друзей в системе EasyWin.</p>
                 <div id="friendsList"></div>
+                <button class="btn btn-secondary" style="margin-top: 10px;" onclick="shareInviteLink()">🔗 Пригласить друга по ссылке</button>
             </div>
         </div>
 
@@ -340,30 +331,25 @@
                 <div class="card-title">👛 Баланс и Кошелек</div>
                 <div style="text-align: center; padding: 10px 0;">
                     <div style="font-size: 11px; color: var(--text-muted);">Текущий баланс:</div>
-                    <div style="font-size: 32px; font-weight: 800; color: #2ed573;" id="walletBalance">45 ₽</div>
-                    <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Запрещено выводить. Можно оплачивать 100% стоимости чита и питомцев!</p>
+                    <div style="font-size: 32px; font-weight: 800; color: #2ed573;" id="walletBalance">0 ₽</div>
+                    <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Балансом можно оплачивать 100% подписок и питомцев в магазине.</p>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">🔗 Реферальная программа</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Делитесь ссылкой с друзьями. 15 ₽ за каждого активного пользователя.</p>
-                <button class="btn btn-glow" onclick="copyRefLink()">🔗 Скопировать ссылку</button>
-            </div>
-
-            <div class="card">
                 <div class="card-title">🎁 Ежедневный бонус</div>
-                <button class="btn btn-secondary" onclick="claimDailyReward()">Забрать +10 ₽ на баланс</button>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Заходите каждый день и получайте +10 ₽ на баланс!</p>
+                <button class="btn btn-glow" onclick="claimDailyReward()">Забрать +10 ₽</button>
             </div>
         </div>
 
         <!-- TAB 5: PROFILE -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
-                <div class="card-title">🎨 Редактировать профиль</div>
+                <div class="card-title">🎨 Профиль пользователя</div>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div>
-                        <label style="font-size: 11px; color: var(--text-muted);">Имя пользователя:</label>
+                        <label style="font-size: 11px; color: var(--text-muted);">Имя в интерфейсе:</label>
                         <input type="text" id="inputName" placeholder="Ваше имя">
                     </div>
                     <div>
@@ -371,24 +357,10 @@
                         <input type="text" id="inputMcNick" placeholder="Steve_Pro">
                     </div>
                     <div>
-                        <label style="font-size: 11px; color: var(--text-muted);">URL Аватарки (необязательно):</label>
-                        <input type="text" id="inputAvatarUrl" placeholder="https://...">
+                        <label style="font-size: 11px; color: var(--text-muted);">Ссылка на фото профиля (URL):</label>
+                        <input type="text" id="inputAvatarUrl" placeholder="https://i.imgur.com/...">
                     </div>
-                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить профиль</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🏆 Достижения и награды</div>
-                <div class="badge-grid">
-                    <div class="badge-card">
-                        <span class="badge-icon">⚡</span>
-                        <div><div style="font-size: 12px; font-weight: 700;">Первопроходец</div><div style="font-size: 9px; color: var(--text-muted);">Бета-тест MiniApp</div></div>
-                    </div>
-                    <div class="badge-card">
-                        <span class="badge-icon">👑</span>
-                        <div><div style="font-size: 12px; font-weight: 700;">VIP Статус</div><div style="font-size: 9px; color: var(--text-muted);">Подписка активна</div></div>
-                    </div>
+                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить изменения</button>
                 </div>
             </div>
         </div>
@@ -405,7 +377,7 @@
             </div>
 
             <div class="card">
-                <div class="card-title">⚙️ Настройки и Эффекты</div>
+                <div class="card-title">⚙️ Системные параметры</div>
                 
                 <div class="setting-group">
                     <div class="setting-header"><span>Язык / Language:</span></div>
@@ -416,7 +388,6 @@
                     </select>
                 </div>
 
-                <!-- Toggles for Effects -->
                 <div class="switch-container">
                     <span class="switch-label">❄️ Отображать Снег</span>
                     <label class="switch">
@@ -434,34 +405,58 @@
                 </div>
 
                 <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border);">
-                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">HWID ПК: <b style="color: #2ed573;" id="hwidStatus">ПРИВЯЗАН</b></div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">HWID ПК: <b style="color: #2ed573;" id="hwidStatus">НЕ ПРИВЯЗАН</b></div>
                     <button class="btn btn-secondary" onclick="resetHwid()">🔄 Сбросить HWID</button>
                 </div>
             </div>
 
-            <!-- Снег настройки -->
+            <!-- Настройки снега -->
             <div class="card" id="snowSettingsCard">
-                <div class="card-title">❄️ Параметры Снега</div>
+                <div class="card-title">❄️ Настройка Снега</div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Количество</span> <span id="valCount">120</span></div>
-                    <input type="range" id="sCount" min="0" max="300" value="120">
+                    <div class="setting-header"><span>Количество частиц</span> <span id="valCount">120</span></div>
+                    <input type="range" id="sCount" min="10" max="300" value="120" oninput="updateSnowCount(this.value)">
                 </div>
                 <div class="setting-group">
-                    <div class="setting-header"><span>Скорость</span> <span id="valSpeed">2.0</span></div>
-                    <input type="range" id="sSpeed" min="0.1" max="8" step="0.1" value="2.0">
+                    <div class="setting-header"><span>Скорость падения</span> <span id="valSpeed">2.0</span></div>
+                    <input type="range" id="sSpeed" min="0.1" max="8" step="0.1" value="2.0" oninput="updateSnowSpeed(this.value)">
+                </div>
+                <div class="setting-group">
+                    <div class="setting-header"><span>Размер частиц</span> <span id="valSize">2.5</span></div>
+                    <input type="range" id="sSize" min="0.5" max="8" step="0.1" value="2.5" oninput="updateSnowSize(this.value)">
+                </div>
+                <div class="setting-group">
+                    <div class="setting-header"><span>Угол наклона</span> <span id="valAngle">0°</span></div>
+                    <input type="range" id="sAngle" min="-45" max="45" value="0" oninput="updateSnowAngle(this.value)">
+                </div>
+                <div class="setting-group">
+                    <div class="setting-header"><span>Сила ветра</span> <span id="valWind">0</span></div>
+                    <input type="range" id="sWind" min="-5" max="5" step="0.1" value="0" oninput="updateSnowWind(this.value)">
                 </div>
             </div>
 
-            <!-- Черная дыра настройки -->
+            <!-- Настройки черной дыры -->
             <div class="card" id="bhSettingsCard">
-                <div class="card-title">🌌 Параметры Черной Дыры</div>
+                <div class="card-title">🌌 Настройка Чёрной Дыры</div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Масштаб</span> <span id="valBhScale">1.0</span></div>
-                    <input type="range" id="bhScale" min="0.2" max="2.0" step="0.1" value="1.0">
+                    <input type="range" id="bhScale" min="0.2" max="2.5" step="0.1" value="1.0" oninput="updateBhScale(this.value)">
+                </div>
+                <div class="setting-group">
+                    <div class="setting-header"><span>Яркость</span> <span id="valBhBright">1.0</span></div>
+                    <input type="range" id="bhBright" min="0" max="2" step="0.1" value="1.0" oninput="updateBhBright(this.value)">
+                </div>
+                <div class="setting-group">
+                    <div class="setting-header"><span>Смещение X</span> <span id="valBhX">0</span></div>
+                    <input type="range" id="bhX" min="-180" max="180" value="0" oninput="updateBhX(this.value)">
+                </div>
+                <div class="setting-group">
+                    <div class="setting-header"><span>Смещение Y</span> <span id="valBhY">0</span></div>
+                    <input type="range" id="bhY" min="-250" max="250" value="0" oninput="updateBhY(this.value)">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Цвет Энергии</span></div>
-                    <input type="color" id="bhColor" value="#8b5cf6" style="width: 100%; height: 36px; border:none; background:none;">
+                    <input type="color" id="bhColor" value="#8b5cf6" style="width: 100%; height: 36px; border:none; background:none;" onchange="updateBhColor(this.value)">
                 </div>
             </div>
         </div>
@@ -500,14 +495,14 @@
     <div class="modal-overlay" id="payModal">
         <div class="modal-body">
             <div class="card-title"><span id="payModalTitle">Оплата</span></div>
-            <p style="font-size: 12px; color: var(--text-muted);">К оплате: <b style="color:#fff" id="payModalPrice">0 ₽</b></p>
+            <p style="font-size: 12px; color: var(--text-muted);">Сумма к оплате: <b style="color:#fff" id="payModalPrice">0 ₽</b></p>
             
             <label style="font-size: 11px; color: var(--text-muted);">Выберите способ оплаты:</label>
             <select id="paySelectMethod">
                 <option value="card">💳 Мировые карты / СБП</option>
                 <option value="crypto">🪙 Криптовалюта (USDT / TON)</option>
                 <option value="stars">⭐ Telegram Stars</option>
-                <option value="balance">👛 Внутренний баланс (45 ₽)</option>
+                <option value="balance">👛 Внутренний баланс</option>
             </select>
 
             <button class="btn btn-glow" onclick="processPayment()">Подтвердить оплату</button>
@@ -519,23 +514,10 @@
     <div class="modal-overlay" id="addFriendModal">
         <div class="modal-body">
             <div class="card-title">➕ Добавить друга</div>
-            <p style="font-size: 11px; color: var(--text-muted);">Введите Telegram Username или Nickname друга:</p>
+            <p style="font-size: 11px; color: var(--text-muted);">Введите корректный Telegram @username пользователя:</p>
             <input type="text" id="friendInput" placeholder="@username">
-            <button class="btn btn-glow" onclick="submitAddFriend()">Добавить (+15 ₽)</button>
+            <button class="btn btn-glow" onclick="submitAddFriend()">Добавить пользователя</button>
             <button class="btn btn-secondary" onclick="closeModal('addFriendModal')">Закрыть</button>
-        </div>
-    </div>
-
-    <!-- View Friend Profile Modal -->
-    <div class="modal-overlay" id="viewFriendModal">
-        <div class="modal-body">
-            <div class="card-title"><span id="fProfileName">Друг</span></div>
-            <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
-                <div>Minecraft Nick: <b style="color:#fff;" id="fProfileMc">-</b></div>
-                <div>Подписка: <b style="color:var(--primary);" id="fProfileSub">-</b></div>
-                <div>Статус в Лаунчере: <b style="color:#2ed573;" id="fProfileStatus">-</b></div>
-            </div>
-            <button class="btn btn-secondary" onclick="closeModal('viewFriendModal')">Закрыть</button>
         </div>
     </div>
 
@@ -543,89 +525,171 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let userState = {
-            name: "匚OÐE_ßƦEAKEƦ",
-            mcNick: "CodeBreaker_MC",
+        // Главное состояние приложения (localStorage)
+        let appState = {
+            balance: 0,
+            customName: "",
+            mcNick: "Steve",
             avatarUrl: "",
-            balance: 45
+            friends: [],
+            lastDailyReward: 0,
+            snowEnabled: true,
+            bhEnabled: true,
+            snowCount: 120,
+            snowSpeed: 2.0,
+            snowSize: 2.5,
+            snowWind: 0,
+            snowAngle: 0,
+            bhScale: 1.0,
+            bhBright: 1.0,
+            bhX: 0,
+            bhY: 0,
+            bhColor: "#8b5cf6",
+            lang: "ru"
         };
 
-        // Тексты локализации
-        const translations = {
-            ru: {
-                home: "Главная", store: "Магазин", friends: "Друзья", ref: "Бонусы", profile: "Профиль", settings: "Настройки",
-                aboutTitle: "🚀 О клиенте EasyWin",
-                aboutDesc: "<b>EasyWin Client</b> — передовой чит-клиент и лаунчер нового поколения для Minecraft. Оборудован гибким HUD, умным Aimbot/TriggerBot, обходит популярные античиты (AAC, Matrix, Grim).",
-                download: "📥 Скачать EasyWin Launcher"
-            },
-            en: {
-                home: "Home", store: "Store", friends: "Friends", ref: "Bonuses", profile: "Profile", settings: "Settings",
-                aboutTitle: "🚀 About EasyWin Client",
-                aboutDesc: "<b>EasyWin Client</b> — next-gen cheat client & launcher for Minecraft. Features smooth HUD, smart Aimbot, and bypasses popular anti-cheats (AAC, Matrix, Grim).",
-                download: "📥 Download EasyWin Launcher"
-            },
-            ua: {
-                home: "Головна", store: "Магазин", friends: "Друзі", ref: "Бонуси", profile: "Профіль", settings: "Налаштування",
-                aboutTitle: "🚀 Про клієнт EasyWin",
-                aboutDesc: "<b>EasyWin Client</b> — передовий чит-клієнт та лаунчер нового покоління для Minecraft. Оснащений гнучким HUD, розумним Aimbot, обходить популярні античити.",
-                download: "📥 Завантажити EasyWin Launcher"
+        function loadAppState() {
+            const saved = localStorage.getItem('easywin_state');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(appState, parsed);
+                } catch(e){}
             }
-        };
+            syncUI();
+        }
 
-        // Друзья
-        let friendsData = [
-            { id: 1, name: "sheet_ghost", mc: "Ghost_MC", sub: "3 Месяца", online: true },
-            { id: 2, name: "Iskandar", mc: "Iskandar_Pro", sub: "1 Месяц", online: false }
-        ];
+        function saveAppState() {
+            localStorage.setItem('easywin_state', JSON.stringify(appState));
+        }
 
+        function syncUI() {
+            document.getElementById('walletBalance').innerText = appState.balance + " ₽";
+            
+            // Пользователь
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const u = tg.initDataUnsafe.user;
+                const name = appState.customName || (u.first_name + (u.last_name ? ' ' + u.last_name : ''));
+                document.getElementById('userName').innerText = name;
+                
+                if (appState.avatarUrl) {
+                    document.getElementById('avatarContainer').innerHTML = `<img src="${appState.avatarUrl}">`;
+                } else if (u.photo_url) {
+                    document.getElementById('avatarContainer').innerHTML = `<img src="${u.photo_url}">`;
+                } else {
+                    document.getElementById('avatarContainer').innerHTML = `<span>${(u.first_name || 'U').charAt(0).toUpperCase()}</span>`;
+                }
+            } else {
+                document.getElementById('userName').innerText = appState.customName || "匚OÐE_ßƦEAKEƦ";
+            }
+
+            document.getElementById('userMcDisplay').innerText = "MC: " + (appState.mcNick || "Не привязан");
+
+            // Настройки ползунков
+            document.getElementById('sCount').value = appState.snowCount;
+            document.getElementById('valCount').innerText = appState.snowCount;
+            document.getElementById('sSpeed').value = appState.snowSpeed;
+            document.getElementById('valSpeed').innerText = appState.snowSpeed;
+            document.getElementById('sSize').value = appState.snowSize;
+            document.getElementById('valSize').innerText = appState.snowSize;
+            document.getElementById('sWind').value = appState.snowWind;
+            document.getElementById('valWind').innerText = appState.snowWind;
+            document.getElementById('sAngle').value = appState.snowAngle;
+            document.getElementById('valAngle').innerText = appState.snowAngle + "°";
+
+            document.getElementById('bhScale').value = appState.bhScale;
+            document.getElementById('valBhScale').innerText = appState.bhScale;
+            document.getElementById('bhBright').value = appState.bhBright;
+            document.getElementById('valBhBright').innerText = appState.bhBright;
+            document.getElementById('bhX').value = appState.bhX;
+            document.getElementById('valBhX').innerText = appState.bhX;
+            document.getElementById('bhY').value = appState.bhY;
+            document.getElementById('valBhY').innerText = appState.bhY;
+            document.getElementById('bhColor').value = appState.bhColor;
+
+            document.getElementById('toggleSnow').checked = appState.snowEnabled;
+            document.getElementById('toggleBh').checked = appState.bhEnabled;
+            document.getElementById('snowSettingsCard').style.display = appState.snowEnabled ? 'block' : 'none';
+            document.getElementById('bhSettingsCard').style.display = appState.bhEnabled ? 'block' : 'none';
+
+            renderFriends();
+        }
+
+        // --- ЛИВ-ОБНОВЛЕНИЯ ПОЛЗУНКОВ ---
+        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); saveAppState(); }
+        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; saveAppState(); }
+        function updateSnowSize(v) { appState.snowSize = parseFloat(v); document.getElementById('valSize').innerText = v; saveAppState(); }
+        function updateSnowWind(v) { appState.snowWind = parseFloat(v); document.getElementById('valWind').innerText = v; saveAppState(); }
+        function updateSnowAngle(v) { appState.snowAngle = parseInt(v); document.getElementById('valAngle').innerText = v + "°"; saveAppState(); }
+
+        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; saveAppState(); }
+        function updateBhBright(v) { appState.bhBright = parseFloat(v); document.getElementById('valBhBright').innerText = v; saveAppState(); }
+        function updateBhX(v) { appState.bhX = parseInt(v); document.getElementById('valBhX').innerText = v; saveAppState(); }
+        function updateBhY(v) { appState.bhY = parseInt(v); document.getElementById('valBhY').innerText = v; saveAppState(); }
+        function updateBhColor(v) { appState.bhColor = v; saveAppState(); }
+
+        function toggleEffect(type) {
+            if(type === 'snow') {
+                appState.snowEnabled = document.getElementById('toggleSnow').checked;
+                document.getElementById('snowSettingsCard').style.display = appState.snowEnabled ? 'block' : 'none';
+            } else if(type === 'bh') {
+                appState.bhEnabled = document.getElementById('toggleBh').checked;
+                document.getElementById('bhSettingsCard').style.display = appState.bhEnabled ? 'block' : 'none';
+            }
+            saveAppState();
+        }
+
+        // --- ДРУЗЬЯ (С ВАЛИДАЦИЕЙ) ---
         function renderFriends() {
             const container = document.getElementById('friendsList');
             container.innerHTML = '';
-            friendsData.forEach(f => {
+            if (appState.friends.length === 0) {
+                container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px 0;">У вас пока нет добавленных друзей.</div>`;
+                return;
+            }
+            appState.friends.forEach(f => {
                 const item = document.createElement('div');
                 item.className = 'friend-item';
-                item.onclick = () => viewFriendProfile(f);
                 item.innerHTML = `
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <span class="friend-status ${f.online ? 'status-online' : 'status-offline'}"></span>
                         <div>
-                            <div style="font-size:13px; font-weight:700; color:#fff;">${f.name}</div>
-                            <div style="font-size:10px; color:var(--text-muted);">MC: ${f.mc}</div>
+                            <div style="font-size:13px; font-weight:700; color:#fff;">${f.username}</div>
+                            <div style="font-size:10px; color:var(--text-muted);">Зарегистрирован в EasyWin</div>
                         </div>
                     </div>
-                    <span style="font-size:10px; font-weight:700; color:var(--primary); background:rgba(139,92,246,0.15); padding:4px 8px; border-radius:8px;">${f.sub}</span>
+                    <span style="font-size:10px; color:#2ed573;">● В сети</span>
                 `;
                 container.appendChild(item);
             });
         }
 
-        function viewFriendProfile(f) {
-            document.getElementById('fProfileName').innerText = f.name;
-            document.getElementById('fProfileMc').innerText = f.mc;
-            document.getElementById('fProfileSub').innerText = f.sub;
-            document.getElementById('fProfileStatus').innerText = f.online ? "● В игре" : "○ Оффлайн";
-            document.getElementById('viewFriendModal').style.display = 'flex';
-        }
-
         function openAddFriendModal() { document.getElementById('addFriendModal').style.display = 'flex'; }
         
         function submitAddFriend() {
-            const val = document.getElementById('friendInput').value.trim();
-            if(!val) return tg.showAlert("Введите ник друга!");
-            
-            // Защита от спама/ботов
-            if(val.length < 3) return tg.showAlert("Слишком короткое имя!");
+            const input = document.getElementById('friendInput').value.trim();
+            if (!input.startsWith('@') || input.length < 5 || input.length > 32) {
+                return tg.showAlert("⚠️ Введите корректный Telegram username (начинается с @, от 5 символов)!");
+            }
 
-            friendsData.push({ id: Date.now(), name: val, mc: val + "_MC", sub: "Бесплатно", online: true });
-            userState.balance += 15;
-            document.getElementById('walletBalance').innerText = userState.balance + " ₽";
+            const exists = appState.friends.some(f => f.username.toLowerCase() === input.toLowerCase());
+            if (exists) {
+                return tg.showAlert("⚠️ Этот пользователь уже добавлен в ваш список!");
+            }
+
+            appState.friends.push({ username: input });
+            saveAppState();
             renderFriends();
             closeModal('addFriendModal');
             document.getElementById('friendInput').value = '';
-            tg.showAlert(`🎉 Друг добавлен! Вам начислено +15 ₽.`);
+            tg.showAlert(`✅ Пользователь ${input} успешно добавлен в друзья!`);
         }
 
-        // Оплата Modal
+        function shareInviteLink() {
+            const inviteUrl = "https://t.me/EasyWinClientBot?start=" + (tg.initDataUnsafe?.user?.id || 'ref');
+            tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(inviteUrl) + "&text=" + encodeURIComponent("Присоединяйся к EasyWin Client App!"));
+        }
+
+        // --- ОПЛАТА МОДАЛКА ---
         let currentPayPrice = 0;
         function openPayModal(title, price) {
             currentPayPrice = price;
@@ -637,19 +701,20 @@
         function processPayment() {
             const method = document.getElementById('paySelectMethod').value;
             if(method === 'balance') {
-                if(userState.balance < currentPayPrice) {
+                if(appState.balance < currentPayPrice) {
                     return tg.showAlert("❌ Недостаточно средств на внутреннем балансе!");
                 }
-                userState.balance -= currentPayPrice;
-                document.getElementById('walletBalance').innerText = userState.balance + " ₽";
+                appState.balance -= currentPayPrice;
+                saveAppState();
+                syncUI();
             }
             closeModal('payModal');
-            tg.showAlert("✅ Оплата успешно обработана!");
+            tg.showAlert("✅ Запрос на оплату отправлен на сервер!");
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // Переключение Вкладок
+        // --- ТАБЫ ---
         function switchTab(tabName, el) {
             const currentTab = document.querySelector('.tab-content.active');
             const targetTab = document.getElementById('tab-' + tabName);
@@ -672,59 +737,45 @@
             }
         }
 
-        // Профиль
+        // --- ПРОФИЛЬ ---
         function saveProfile() {
             const name = document.getElementById('inputName').value.trim();
             const mc = document.getElementById('inputMcNick').value.trim();
             const avatar = document.getElementById('inputAvatarUrl').value.trim();
 
-            if(name) userState.name = name;
-            if(mc) userState.mcNick = mc;
-            if(avatar) userState.avatarUrl = avatar;
+            if(name) appState.customName = name;
+            if(mc) appState.mcNick = mc;
+            if(avatar) appState.avatarUrl = avatar;
 
-            document.getElementById('userName').innerText = userState.name;
-            document.getElementById('userMcDisplay').innerText = "MC: " + userState.mcNick;
+            saveAppState();
+            syncUI();
+            tg.showAlert("💾 Изменения профиля сохранены!");
+        }
 
-            if(userState.avatarUrl) {
-                document.getElementById('avatarContainer').innerHTML = `<img src="${userState.avatarUrl}">`;
+        // --- ЕЖЕДНЕВНЫЙ БОНУС ---
+        function claimDailyReward() {
+            const now = Date.now();
+            if (now - appState.lastDailyReward < 86400000) {
+                return tg.showAlert("⏳ Вы уже получали ежедневный бонус за последние 24 часа!");
             }
-
-            tg.showAlert("💾 Профиль сохранен!");
+            appState.lastDailyReward = now;
+            appState.balance += 10;
+            saveAppState();
+            syncUI();
+            tg.showAlert("🎁 Вы получили +10 ₽ на ваш баланс!");
         }
 
-        // Локализация
-        function changeLanguage() {
-            const lang = document.getElementById('langSelect').value;
-            const t = translations[lang] || translations.ru;
-            
-            document.getElementById('nav-home').innerText = t.home;
-            document.getElementById('nav-store').innerText = t.store;
-            document.getElementById('nav-friends').innerText = t.friends;
-            document.getElementById('nav-ref').innerText = t.ref;
-            document.getElementById('nav-profile').innerText = t.profile;
-            document.getElementById('nav-settings').innerText = t.settings;
-
-            document.getElementById('txt-about-title').innerText = t.aboutTitle;
-            document.getElementById('txt-about-desc').innerHTML = t.aboutDesc;
-            document.getElementById('txt-btn-download').innerText = t.download;
-        }
-
-        // Экшены
+        // --- ЭКШЕНЫ ---
         function activateKey() { tg.showAlert("🔑 Проверка ключа..."); }
         function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher!"); }
         function loginGoogle() { tg.showAlert("🌐 Окно авторизации Google..."); }
         function resetHwid() {
             document.getElementById('hwidStatus').innerText = "СБРОШЕН";
-            tg.showAlert("🔄 HWID успешно сброшен!");
+            tg.showAlert("🔄 Запрос на сброс HWID отправлен!");
         }
-        function copyRefLink() { tg.showAlert("🔗 Реферальная ссылка скопирована!"); }
-        function claimDailyReward() {
-            userState.balance += 10;
-            document.getElementById('walletBalance').innerText = userState.balance + " ₽";
-            tg.showAlert("🎁 Вы получили +10 ₽ на баланс!");
-        }
+        function changeLanguage() { saveAppState(); }
 
-        // CANVAS GRAPHICS
+        // --- CANVAS GRAPHICS ENGINE ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let cw, ch;
@@ -736,67 +787,83 @@
         window.addEventListener('resize', resize);
         resize();
 
-        const settings = {
-            snowEnabled: true,
-            bhEnabled: true,
-            snow: { count: 120, speed: 2.0 },
-            bh: { scale: 1.0, color: '#8b5cf6' }
-        };
-
-        function toggleEffect(type) {
-            if(type === 'snow') {
-                settings.snowEnabled = document.getElementById('toggleSnow').checked;
-                document.getElementById('snowSettingsCard').style.display = settings.snowEnabled ? 'block' : 'none';
-            } else if(type === 'bh') {
-                settings.bhEnabled = document.getElementById('toggleBh').checked;
-                document.getElementById('bhSettingsCard').style.display = settings.bhEnabled ? 'block' : 'none';
-            }
-        }
-
         let particles = [];
-        for(let i=0; i<150; i++) {
-            particles.push({ x: Math.random()*cw, y: Math.random()*ch, r: Math.random()*1.5 + 0.5, speed: Math.random()*0.8 + 0.2 });
+        function initSnow() {
+            particles = [];
+            for(let i=0; i<300; i++) {
+                particles.push({
+                    x: Math.random() * cw,
+                    y: Math.random() * ch,
+                    r: Math.random() * 1.5 + 0.5,
+                    speedMult: Math.random() * 0.8 + 0.2
+                });
+            }
         }
 
         function animate() {
             ctx.clearRect(0, 0, cw, ch);
 
             // Чёрная дыра
-            if(settings.bhEnabled) {
-                const centerX = cw/2;
-                const centerY = ch/4;
-                const radius = 45 * settings.bh.scale;
+            if(appState.bhEnabled) {
+                const centerX = cw/2 + appState.bhX;
+                const centerY = ch/4 + appState.bhY;
+                const radius = 45 * appState.bhScale;
 
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 
-                const glow = ctx.createRadialGradient(0, 0, radius*0.8, 0, 0, radius*3);
-                glow.addColorStop(0, settings.bh.color);
+                const glow = ctx.createRadialGradient(0, 0, radius*0.8, 0, 0, radius*3.2);
+                glow.addColorStop(0, appState.bhColor);
                 glow.addColorStop(1, 'rgba(0,0,0,0)');
                 ctx.fillStyle = glow;
-                ctx.beginPath(); ctx.arc(0, 0, radius*3, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.arc(0, 0, radius*3.2, 0, Math.PI*2);
+                ctx.fill();
 
-                ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI*2);
-                ctx.fillStyle = '#000000'; ctx.fill();
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI*2);
+                ctx.fillStyle = '#000000';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(0, 0, radius + 1.5, 0, Math.PI*2);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * appState.bhBright})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
                 ctx.restore();
             }
 
             // Снег
-            if(settings.snowEnabled) {
-                ctx.fillStyle = 'rgba(255,255,255,0.8)';
-                for(let i=0; i<settings.snow.count; i++) {
+            if(appState.snowEnabled) {
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                const angleRad = appState.snowAngle * Math.PI / 180;
+                const dirX = Math.sin(angleRad);
+                const dirY = Math.cos(angleRad);
+
+                for(let i = 0; i < appState.snowCount; i++) {
                     const p = particles[i];
-                    p.y += p.speed * settings.snow.speed;
+                    if(!p) break;
+
+                    p.x += (dirX * appState.snowSpeed * p.speedMult) + appState.snowWind;
+                    p.y += (dirY * appState.snowSpeed * p.speedMult);
+
                     if(p.y > ch) p.y = -10;
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+                    if(p.x > cw) p.x = 0;
+                    if(p.x < 0) p.x = cw;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r * appState.snowSize, 0, Math.PI*2);
+                    ctx.fill();
                 }
             }
 
             requestAnimationFrame(animate);
         }
 
-        // Старт
-        renderFriends();
+        // Запуск
+        loadAppState();
+        initSnow();
         animate();
     </script>
 </body>
