@@ -17,6 +17,7 @@
             --glass-bg: rgba(18, 20, 32, 0.85);
             --glass-border: rgba(255, 255, 255, 0.12);
             --card-radius: 20px;
+            --danger: #ff4757;
             --success: #2ed573;
         }
 
@@ -41,7 +42,6 @@
             overflow-x: hidden;
         }
 
-        /* WebGL Background Canvas */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -59,7 +59,7 @@
             gap: 14px;
         }
 
-        /* Top Profile Capsule Header */
+        /* Top Profile Header Capsule */
         .top-header {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -80,13 +80,13 @@
             display: flex; align-items: center; justify-content: center;
             font-weight: 800; font-size: 18px; color: #fff;
             border: 2px solid rgba(255, 255, 255, 0.25);
-            overflow: hidden; flex-shrink: 0;
+            overflow: hidden; flex-shrink: 0; cursor: pointer;
         }
         .avatar-circle img {
             width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
         }
         .user-details { display: flex; flex-direction: column; }
-        .user-name { font-size: 15px; font-weight: 700; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .user-name { font-size: 15px; font-weight: 700; color: #ffffff; }
         .user-mc { font-size: 11px; color: var(--text-muted); }
         .brand-badge {
             font-size: 11px; font-weight: 800;
@@ -135,8 +135,8 @@
         .tariff-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
         .tariff-price { font-size: 15px; font-weight: 800; color: #fff; }
 
-        /* Dark Inputs & Selects (Не режет глаза) */
-        input[type="text"], select {
+        /* Inputs & Selects */
+        input[type="text"], input[type="email"], input[type="password"], select {
             width: 100%;
             background: #121420 !important;
             color: #f8fafc !important;
@@ -148,8 +148,9 @@
             background-position: right 14px center !important;
             background-size: 15px !important;
         }
-        select option { background-color: #0d0f17 !important; color: #f8fafc !important; }
-        input[type="text"]:focus, select:focus { border-color: var(--primary) !important; }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+            border-color: var(--primary) !important;
+        }
 
         /* Buttons */
         .btn {
@@ -166,9 +167,8 @@
             background: rgba(255, 255, 255, 0.06); color: var(--text-main);
             border: 1px solid var(--glass-border);
         }
-        .btn-google { background: #3b79db; color: #fff; }
 
-        /* Switches */
+        /* Switches & Sliders */
         .switch-container {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
         }
@@ -187,7 +187,6 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Sliders */
         .setting-group { margin-bottom: 12px; }
         .setting-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
         input[type="range"] {
@@ -206,29 +205,30 @@
         }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 3px;
-            color: var(--text-muted); font-size: 9px; font-weight: 600; cursor: pointer;
-            transition: color 0.2s; width: 16%; text-align: center;
+            color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer;
+            transition: color 0.2s; width: 25%; text-align: center;
         }
         .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 18px; }
+        .nav-icon { font-size: 19px; }
 
-        /* Friend Items */
-        .friend-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 12px; background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin-bottom: 8px;
-        }
-
-        /* Modal Popups */
+        /* Modals */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
             z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px;
         }
         .modal-body {
             background: #0d0f17; border: 1px solid var(--glass-border);
-            border-radius: var(--card-radius); width: 100%; max-width: 360px;
+            border-radius: var(--card-radius); width: 100%; max-width: 370px;
             padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 14px;
+        }
+
+        .key-box {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px dashed var(--primary);
+            border-radius: 12px; padding: 14px;
+            text-align: center; font-family: monospace; font-size: 16px; font-weight: 700;
+            color: #2ed573; letter-spacing: 1px;
         }
     </style>
 </head>
@@ -236,16 +236,19 @@
 
     <canvas id="bg-canvas"></canvas>
 
+    <!-- Скрытый вход для загрузки аватарки из галереи -->
+    <input type="file" id="galleryFileInput" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
+
     <div class="container">
         
         <!-- Top Profile Capsule -->
         <div class="top-header">
             <div class="user-info">
-                <div class="avatar-circle" id="avatarContainer">
+                <div class="avatar-circle" id="avatarContainer" onclick="triggerGallerySelect()" title="Нажмите, чтобы сменить фото">
                     <span id="avatarText">U</span>
                 </div>
                 <div class="user-details">
-                    <span class="user-name" id="userName">User</span>
+                    <span class="user-name" id="userName">Гость</span>
                     <span class="user-mc" id="userMcDisplay">MC: Не привязан</span>
                 </div>
             </div>
@@ -255,23 +258,23 @@
         <!-- TAB 1: HOME -->
         <div id="tab-home" class="tab-content active">
             <div class="card">
-                <div class="card-title"><span id="txt-about-title">🚀 О клиенте EasyWin</span></div>
-                <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;" id="txt-about-desc">
-                    <b>EasyWin Client</b> — передовой чит-клиент и лаунчер нового поколения для Minecraft. Оборудован гибким HUD, умным Aimbot/TriggerBot, обходит популярные античиты (AAC, Matrix, Grim), гарантируя высокий FPS и стабильность.
+                <div class="card-title">🚀 О клиенте EasyWin</div>
+                <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                    <b>EasyWin Client</b> — приватный чит-клиент и лаунчер для Minecraft. Включает обходы античитов (AAC, Matrix, Grim), гибкий HUD, аимбот и высокий FPS.
                 </p>
-                <button class="btn btn-glow" onclick="downloadLauncher()" id="txt-btn-download">📥 Скачать EasyWin Launcher</button>
+                <button class="btn btn-glow" onclick="downloadLauncher()">📥 Скачать EasyWin Launcher</button>
             </div>
 
             <div class="card">
-                <div class="card-title">🔥 Популярные подписки</div>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div class="tariff-card" onclick="openPayModal('Подписка 1 Месяц', 180)">
-                        <div><div class="tariff-name">1 Месяц</div><div class="tariff-sub">Стандартный доступ</div></div>
-                        <div class="tariff-price">180 ₽</div>
+                <div class="card-title">📊 Статус вашего аккаунта</div>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--text-muted);">Текущий тариф:</span>
+                        <b style="color:var(--primary);" id="homeTabTariff">FREE BETA</b>
                     </div>
-                    <div class="tariff-card active-tariff" onclick="openPayModal('Подписка 3 Месяца 🔥', 799)">
-                        <div><div class="tariff-name">3 Месяца 🔥</div><div class="tariff-sub">Максимальная выгода</div></div>
-                        <div class="tariff-price">799 ₽</div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--text-muted);">Привязка HWID:</span>
+                        <b style="color:var(--success);" id="homeTabHwid">НЕ ПРИВЯЗАН</b>
                     </div>
                 </div>
             </div>
@@ -290,8 +293,8 @@
                         <div><div class="tariff-name">2 Месяца</div></div>
                         <div class="tariff-price">400 ₽</div>
                     </div>
-                    <div class="tariff-card active-tariff" onclick="openPayModal('Подписка 3 Месяца', 799)">
-                        <div><div class="tariff-name">3 Месяца</div></div>
+                    <div class="tariff-card active-tariff" onclick="openPayModal('Подписка 3 Месяца 🔥', 799)">
+                        <div><div class="tariff-name">3 Месяца 🔥</div></div>
                         <div class="tariff-price">799 ₽</div>
                     </div>
                 </div>
@@ -312,82 +315,46 @@
             </div>
         </div>
 
-        <!-- TAB 3: FRIENDS -->
-        <div id="tab-friends" class="tab-content">
-            <div class="card">
-                <div class="card-title">
-                    <span>👥 Ваши друзья</span>
-                    <button class="btn btn-glow" style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="openAddFriendModal()">+ Добавить</button>
-                </div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Список ваших подтвержденных друзей в системе EasyWin.</p>
-                <div id="friendsList"></div>
-                <button class="btn btn-secondary" style="margin-top: 10px;" onclick="shareInviteLink()">🔗 Пригласить друга по ссылке</button>
-            </div>
-        </div>
-
-        <!-- TAB 4: BONUSES & WALLET -->
-        <div id="tab-ref" class="tab-content">
-            <div class="card">
-                <div class="card-title">👛 Баланс и Кошелек</div>
-                <div style="text-align: center; padding: 10px 0;">
-                    <div style="font-size: 11px; color: var(--text-muted);">Текущий баланс:</div>
-                    <div style="font-size: 32px; font-weight: 800; color: #2ed573;" id="walletBalance">0 ₽</div>
-                    <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Балансом можно оплачивать 100% подписок и питомцев в магазине.</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🎁 Ежедневный бонус</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Заходите каждый день и получайте +10 ₽ на баланс!</p>
-                <button class="btn btn-glow" onclick="claimDailyReward()">Забрать +10 ₽</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: PROFILE -->
+        <!-- TAB 3: PROFILE -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
-                <div class="card-title">🎨 Профиль пользователя</div>
+                <div class="card-title">👤 Мой Профиль</div>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn btn-secondary" onclick="triggerGallerySelect()">🖼 Загрузить фото из галереи</button>
                     <div>
-                        <label style="font-size: 11px; color: var(--text-muted);">Имя в интерфейсе:</label>
+                        <label style="font-size: 11px; color: var(--text-muted);">Имя пользователя:</label>
                         <input type="text" id="inputName" placeholder="Ваше имя">
                     </div>
                     <div>
                         <label style="font-size: 11px; color: var(--text-muted);">Ник в Minecraft:</label>
                         <input type="text" id="inputMcNick" placeholder="Steve_Pro">
                     </div>
-                    <div>
-                        <label style="font-size: 11px; color: var(--text-muted);">Ссылка на фото профиля (URL):</label>
-                        <input type="text" id="inputAvatarUrl" placeholder="https://i.imgur.com/...">
-                    </div>
-                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить изменения</button>
+                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить профиль</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔑 Статус Лицензии</div>
+                <div style="display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                    <div>Активный ключ: <b style="color:var(--primary);" id="profileKeyStatus">НЕ АКТИВИРОВАН</b></div>
+                    <div>Срок подписки: <b style="color:#fff;" id="profileSubExpires">Нет активной подписки</b></div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 6: SETTINGS -->
+        <!-- TAB 4: SETTINGS -->
         <div id="tab-settings" class="tab-content">
             <div class="card">
-                <div class="card-title">🔑 Ключ доступа и Авторизация</div>
-                <input type="text" id="keyInput" placeholder="EW-XXXX-XXXX-XXXX" style="margin-bottom: 10px;">
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-glow" onclick="activateKey()">Активировать</button>
-                    <button class="btn btn-google" onclick="loginGoogle()">Google Login</button>
-                </div>
+                <div class="card-title">🔄 Сброс HWID и Восстановление Ключа</div>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+                    При сбросе HWID на вашу почту придет код подтверждения. После ввода кода вы сможете один раз скопировать ваш ключ.
+                </p>
+                <button class="btn btn-glow" onclick="openHwidResetModal()">Сбросить HWID / Восстановить Ключ</button>
             </div>
 
             <div class="card">
-                <div class="card-title">⚙️ Системные параметры</div>
+                <div class="card-title">⚙️ Графика и Анимации</div>
                 
-                <div class="setting-group">
-                    <div class="setting-header"><span>Язык / Language:</span></div>
-                    <select id="langSelect" onchange="changeLanguage()">
-                        <option value="ru">Русский 🇷🇺</option>
-                        <option value="en">English 🇬🇧</option>
-                        <option value="ua">Українська 🇺🇦</option>
-                    </select>
-                </div>
-
                 <div class="switch-container">
                     <span class="switch-label">❄️ Отображать Снег</span>
                     <label class="switch">
@@ -404,10 +371,7 @@
                     </label>
                 </div>
 
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border);">
-                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">HWID ПК: <b style="color: #2ed573;" id="hwidStatus">НЕ ПРИВЯЗАН</b></div>
-                    <button class="btn btn-secondary" onclick="resetHwid()">🔄 Сбросить HWID</button>
-                </div>
+                <button class="btn btn-secondary" style="margin-top: 10px;" onclick="logoutUser()">🚪 Выйти из аккаунта</button>
             </div>
 
             <!-- Настройки снега -->
@@ -421,18 +385,6 @@
                     <div class="setting-header"><span>Скорость падения</span> <span id="valSpeed">2.0</span></div>
                     <input type="range" id="sSpeed" min="0.1" max="8" step="0.1" value="2.0" oninput="updateSnowSpeed(this.value)">
                 </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Размер частиц</span> <span id="valSize">2.5</span></div>
-                    <input type="range" id="sSize" min="0.5" max="8" step="0.1" value="2.5" oninput="updateSnowSize(this.value)">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Угол наклона</span> <span id="valAngle">0°</span></div>
-                    <input type="range" id="sAngle" min="-45" max="45" value="0" oninput="updateSnowAngle(this.value)">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Сила ветра</span> <span id="valWind">0</span></div>
-                    <input type="range" id="sWind" min="-5" max="5" step="0.1" value="0" oninput="updateSnowWind(this.value)">
-                </div>
             </div>
 
             <!-- Настройки черной дыры -->
@@ -440,19 +392,7 @@
                 <div class="card-title">🌌 Настройка Чёрной Дыры</div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Масштаб</span> <span id="valBhScale">1.0</span></div>
-                    <input type="range" id="bhScale" min="0.2" max="2.5" step="0.1" value="1.0" oninput="updateBhScale(this.value)">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Яркость</span> <span id="valBhBright">1.0</span></div>
-                    <input type="range" id="bhBright" min="0" max="2" step="0.1" value="1.0" oninput="updateBhBright(this.value)">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Смещение X</span> <span id="valBhX">0</span></div>
-                    <input type="range" id="bhX" min="-180" max="180" value="0" oninput="updateBhX(this.value)">
-                </div>
-                <div class="setting-group">
-                    <div class="setting-header"><span>Смещение Y</span> <span id="valBhY">0</span></div>
-                    <input type="range" id="bhY" min="-250" max="250" value="0" oninput="updateBhY(this.value)">
+                    <input type="range" id="bhScale" min="0.2" max="2.0" step="0.1" value="1.0" oninput="updateBhScale(this.value)">
                 </div>
                 <div class="setting-group">
                     <div class="setting-header"><span>Цвет Энергии</span></div>
@@ -463,61 +403,96 @@
 
     </div>
 
-    <!-- Bottom Nav -->
+    <!-- Bottom Nav Bar -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this)">
             <span class="nav-icon">🏠</span>
-            <span id="nav-home">Главная</span>
+            <span>Главная</span>
         </div>
         <div class="nav-item" onclick="switchTab('store', this)">
             <span class="nav-icon">🛒</span>
-            <span id="nav-store">Магазин</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('friends', this)">
-            <span class="nav-icon">👥</span>
-            <span id="nav-friends">Друзья</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('ref', this)">
-            <span class="nav-icon">🎁</span>
-            <span id="nav-ref">Бонусы</span>
+            <span>Магазин</span>
         </div>
         <div class="nav-item" onclick="switchTab('profile', this)">
             <span class="nav-icon">👤</span>
-            <span id="nav-profile">Профиль</span>
+            <span>Профиль</span>
         </div>
         <div class="nav-item" onclick="switchTab('settings', this)">
             <span class="nav-icon">⚙️</span>
-            <span id="nav-settings">Настройки</span>
+            <span>Настройки</span>
         </div>
     </div>
 
-    <!-- Payment Modal -->
+    <!-- MODAL 1: AUTH (Вход / Регистрация) -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-body">
+            <div class="card-title"><span id="authModalTitle">Вход в EasyWin</span></div>
+            
+            <div id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email почта" style="margin-bottom: 8px;">
+                <input type="password" id="loginPassword" placeholder="Пароль" style="margin-bottom: 12px;">
+                <button class="btn btn-glow" onclick="submitLogin()">Войти</button>
+                <button class="btn btn-secondary" style="margin-top: 8px;" onclick="toggleAuthMode('register')">Создать аккаунт</button>
+            </div>
+
+            <div id="registerForm" style="display: none;">
+                <input type="email" id="regEmail" placeholder="Email почта" style="margin-bottom: 8px;">
+                <input type="text" id="regName" placeholder="Ваше Имя" style="margin-bottom: 8px;">
+                <input type="text" id="regMcNick" placeholder="Ник в Minecraft" style="margin-bottom: 8px;">
+                <input type="password" id="regPassword" placeholder="Пароль" style="margin-bottom: 12px;">
+                <button class="btn btn-glow" onclick="submitRegister()">Зарегистрироваться</button>
+                <button class="btn btn-secondary" style="margin-top: 8px;" onclick="toggleAuthMode('login')">Уже есть аккаунт</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: HWID & KEY RESET (Подтверждение по Email) -->
+    <div class="modal-overlay" id="hwidResetModal">
+        <div class="modal-body">
+            <div class="card-title">🔄 Сброс HWID и Восстановление Ключа</div>
+            
+            <!-- Шаг 1: Ввод почты -->
+            <div id="hwidStep1">
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Введите вашу привязанную почту для получения кода:</p>
+                <input type="email" id="resetEmailInput" placeholder="your@email.com" style="margin-bottom: 12px;">
+                <button class="btn btn-glow" onclick="sendResetCode()">Отправить код на Email</button>
+                <button class="btn btn-secondary" style="margin-top: 8px;" onclick="closeModal('hwidResetModal')">Отмена</button>
+            </div>
+
+            <!-- Шаг 2: Ввод кода -->
+            <div id="hwidStep2" style="display: none;">
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Введи 6-значный код из письма:</p>
+                <input type="text" id="resetCodeInput" placeholder="123456" style="margin-bottom: 12px; text-align: center; font-size: 18px; letter-spacing: 4px;">
+                <button class="btn btn-glow" onclick="verifyResetCode()">Подтвердить код</button>
+            </div>
+
+            <!-- Шаг 3: Вывод ключа (Единождо!) -->
+            <div id="hwidStep3" style="display: none;">
+                <p style="font-size: 11px; color: #ff4757; font-weight: 700; text-align: center;">
+                    ⚠️ СКОПИРУЙТЕ И СОХРАНИТЕ КЛЮЧ! ОН БОЛЬШЕ НЕ БУДЕТ ПОКАЗАН!
+                </p>
+                <div class="key-box" id="generatedKeyDisplay">EW-89F2-K92A-881A</div>
+                <button class="btn btn-glow" onclick="copyGeneratedKey()">📋 Скопировать Ключ</button>
+                <button class="btn btn-secondary" style="margin-top: 8px;" onclick="finishKeyReset()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: PAYMENT -->
     <div class="modal-overlay" id="payModal">
         <div class="modal-body">
             <div class="card-title"><span id="payModalTitle">Оплата</span></div>
-            <p style="font-size: 12px; color: var(--text-muted);">Сумма к оплате: <b style="color:#fff" id="payModalPrice">0 ₽</b></p>
+            <p style="font-size: 12px; color: var(--text-muted);">К оплате: <b style="color:#fff" id="payModalPrice">0 ₽</b></p>
             
-            <label style="font-size: 11px; color: var(--text-muted);">Выберите способ оплаты:</label>
+            <label style="font-size: 11px; color: var(--text-muted);">Выберите платежную систему:</label>
             <select id="paySelectMethod">
-                <option value="card">💳 Мировые карты / СБП</option>
-                <option value="crypto">🪙 Криптовалюта (USDT / TON)</option>
+                <option value="card">💳 Банковская карта / СБП (AAio / FreeKassa)</option>
+                <option value="crypto">🪙 Криптовалюта (CryptoBot / USDT / TON)</option>
                 <option value="stars">⭐ Telegram Stars</option>
-                <option value="balance">👛 Внутренний баланс</option>
             </select>
 
-            <button class="btn btn-glow" onclick="processPayment()">Подтвердить оплату</button>
+            <button class="btn btn-glow" onclick="processPayment()">Перейти к оплате</button>
             <button class="btn btn-secondary" onclick="closeModal('payModal')">Отмена</button>
-        </div>
-    </div>
-
-    <!-- Add Friend Modal -->
-    <div class="modal-overlay" id="addFriendModal">
-        <div class="modal-body">
-            <div class="card-title">➕ Добавить друга</div>
-            <p style="font-size: 11px; color: var(--text-muted);">Введите корректный Telegram @username пользователя:</p>
-            <input type="text" id="friendInput" placeholder="@username">
-            <button class="btn btn-glow" onclick="submitAddFriend()">Добавить пользователя</button>
-            <button class="btn btn-secondary" onclick="closeModal('addFriendModal')">Закрыть</button>
         </div>
     </div>
 
@@ -525,171 +500,178 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Главное состояние приложения (localStorage)
         let appState = {
-            balance: 0,
-            customName: "",
-            mcNick: "Steve",
+            isLoggedIn: false,
+            email: "",
+            name: "",
+            mcNick: "",
             avatarUrl: "",
-            friends: [],
-            lastDailyReward: 0,
+            activeKey: "",
+            subExpires: "",
             snowEnabled: true,
             bhEnabled: true,
             snowCount: 120,
             snowSpeed: 2.0,
-            snowSize: 2.5,
-            snowWind: 0,
-            snowAngle: 0,
             bhScale: 1.0,
-            bhBright: 1.0,
-            bhX: 0,
-            bhY: 0,
-            bhColor: "#8b5cf6",
-            lang: "ru"
+            bhColor: "#8b5cf6"
         };
 
         function loadAppState() {
-            const saved = localStorage.getItem('easywin_state');
+            const saved = localStorage.getItem('easywin_user_session');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
                     Object.assign(appState, parsed);
                 } catch(e){}
             }
+
+            if (!appState.isLoggedIn) {
+                document.getElementById('authModal').style.display = 'flex';
+            }
+
             syncUI();
         }
 
         function saveAppState() {
-            localStorage.setItem('easywin_state', JSON.stringify(appState));
+            localStorage.setItem('easywin_user_session', JSON.stringify(appState));
         }
 
         function syncUI() {
-            document.getElementById('walletBalance').innerText = appState.balance + " ₽";
-            
-            // Пользователь
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const u = tg.initDataUnsafe.user;
-                const name = appState.customName || (u.first_name + (u.last_name ? ' ' + u.last_name : ''));
-                document.getElementById('userName').innerText = name;
-                
-                if (appState.avatarUrl) {
-                    document.getElementById('avatarContainer').innerHTML = `<img src="${appState.avatarUrl}">`;
-                } else if (u.photo_url) {
-                    document.getElementById('avatarContainer').innerHTML = `<img src="${u.photo_url}">`;
-                } else {
-                    document.getElementById('avatarContainer').innerHTML = `<span>${(u.first_name || 'U').charAt(0).toUpperCase()}</span>`;
-                }
+            document.getElementById('userName').innerText = appState.name || "Гость";
+            document.getElementById('userMcDisplay').innerText = "MC: " + (appState.mcNick || "Не привязан");
+            document.getElementById('inputName').value = appState.name || "";
+            document.getElementById('inputMcNick').value = appState.mcNick || "";
+
+            if (appState.avatarUrl) {
+                document.getElementById('avatarContainer').innerHTML = `<img src="${appState.avatarUrl}">`;
             } else {
-                document.getElementById('userName').innerText = appState.customName || "匚OÐE_ßƦEAKEƦ";
+                document.getElementById('avatarContainer').innerHTML = `<span>${(appState.name || 'U').charAt(0).toUpperCase()}</span>`;
             }
 
-            document.getElementById('userMcDisplay').innerText = "MC: " + (appState.mcNick || "Не привязан");
-
-            // Настройки ползунков
-            document.getElementById('sCount').value = appState.snowCount;
-            document.getElementById('valCount').innerText = appState.snowCount;
-            document.getElementById('sSpeed').value = appState.snowSpeed;
-            document.getElementById('valSpeed').innerText = appState.snowSpeed;
-            document.getElementById('sSize').value = appState.snowSize;
-            document.getElementById('valSize').innerText = appState.snowSize;
-            document.getElementById('sWind').value = appState.snowWind;
-            document.getElementById('valWind').innerText = appState.snowWind;
-            document.getElementById('sAngle').value = appState.snowAngle;
-            document.getElementById('valAngle').innerText = appState.snowAngle + "°";
-
-            document.getElementById('bhScale').value = appState.bhScale;
-            document.getElementById('valBhScale').innerText = appState.bhScale;
-            document.getElementById('bhBright').value = appState.bhBright;
-            document.getElementById('valBhBright').innerText = appState.bhBright;
-            document.getElementById('bhX').value = appState.bhX;
-            document.getElementById('valBhX').innerText = appState.bhX;
-            document.getElementById('bhY').value = appState.bhY;
-            document.getElementById('valBhY').innerText = appState.bhY;
-            document.getElementById('bhColor').value = appState.bhColor;
+            document.getElementById('profileKeyStatus').innerText = appState.activeKey ? "АКТИВИРОВАН" : "НЕ АКТИВИРОВАН";
+            document.getElementById('profileSubExpires').innerText = appState.subExpires || "Нет активной подписки";
+            document.getElementById('homeTabTariff').innerText = appState.subExpires ? "ПРИВАТНЫЙ ДОСТУП" : "FREE BETA";
 
             document.getElementById('toggleSnow').checked = appState.snowEnabled;
             document.getElementById('toggleBh').checked = appState.bhEnabled;
-            document.getElementById('snowSettingsCard').style.display = appState.snowEnabled ? 'block' : 'none';
-            document.getElementById('bhSettingsCard').style.display = appState.bhEnabled ? 'block' : 'none';
-
-            renderFriends();
         }
 
-        // --- ЛИВ-ОБНОВЛЕНИЯ ПОЛЗУНКОВ ---
-        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); saveAppState(); }
-        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; saveAppState(); }
-        function updateSnowSize(v) { appState.snowSize = parseFloat(v); document.getElementById('valSize').innerText = v; saveAppState(); }
-        function updateSnowWind(v) { appState.snowWind = parseFloat(v); document.getElementById('valWind').innerText = v; saveAppState(); }
-        function updateSnowAngle(v) { appState.snowAngle = parseInt(v); document.getElementById('valAngle').innerText = v + "°"; saveAppState(); }
-
-        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; saveAppState(); }
-        function updateBhBright(v) { appState.bhBright = parseFloat(v); document.getElementById('valBhBright').innerText = v; saveAppState(); }
-        function updateBhX(v) { appState.bhX = parseInt(v); document.getElementById('valBhX').innerText = v; saveAppState(); }
-        function updateBhY(v) { appState.bhY = parseInt(v); document.getElementById('valBhY').innerText = v; saveAppState(); }
-        function updateBhColor(v) { appState.bhColor = v; saveAppState(); }
-
-        function toggleEffect(type) {
-            if(type === 'snow') {
-                appState.snowEnabled = document.getElementById('toggleSnow').checked;
-                document.getElementById('snowSettingsCard').style.display = appState.snowEnabled ? 'block' : 'none';
-            } else if(type === 'bh') {
-                appState.bhEnabled = document.getElementById('toggleBh').checked;
-                document.getElementById('bhSettingsCard').style.display = appState.bhEnabled ? 'block' : 'none';
+        // --- ВХОД И РЕГИСТРАЦИЯ ---
+        function toggleAuthMode(mode) {
+            if (mode === 'register') {
+                document.getElementById('authModalTitle').innerText = "Регистрация";
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+            } else {
+                document.getElementById('authModalTitle').innerText = "Вход в EasyWin";
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
             }
+        }
+
+        function submitRegister() {
+            const email = document.getElementById('regEmail').value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const mc = document.getElementById('regMcNick').value.trim();
+            const pass = document.getElementById('regPassword').value.trim();
+
+            if (!email || !name || !pass) return tg.showAlert("⚠️ Заполните все обязательные поля!");
+
+            appState.isLoggedIn = true;
+            appState.email = email;
+            appState.name = name;
+            appState.mcNick = mc || "Steve";
             saveAppState();
+            syncUI();
+            closeModal('authModal');
+            tg.showAlert("🎉 Регистрация успешна! Добро пожаловать.");
         }
 
-        // --- ДРУЗЬЯ (С ВАЛИДАЦИЕЙ) ---
-        function renderFriends() {
-            const container = document.getElementById('friendsList');
-            container.innerHTML = '';
-            if (appState.friends.length === 0) {
-                container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px 0;">У вас пока нет добавленных друзей.</div>`;
-                return;
-            }
-            appState.friends.forEach(f => {
-                const item = document.createElement('div');
-                item.className = 'friend-item';
-                item.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div>
-                            <div style="font-size:13px; font-weight:700; color:#fff;">${f.username}</div>
-                            <div style="font-size:10px; color:var(--text-muted);">Зарегистрирован в EasyWin</div>
-                        </div>
-                    </div>
-                    <span style="font-size:10px; color:#2ed573;">● В сети</span>
-                `;
-                container.appendChild(item);
-            });
-        }
+        function submitLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
 
-        function openAddFriendModal() { document.getElementById('addFriendModal').style.display = 'flex'; }
-        
-        function submitAddFriend() {
-            const input = document.getElementById('friendInput').value.trim();
-            if (!input.startsWith('@') || input.length < 5 || input.length > 32) {
-                return tg.showAlert("⚠️ Введите корректный Telegram username (начинается с @, от 5 символов)!");
-            }
+            if (!email || !pass) return tg.showAlert("⚠️ Введите email и пароль!");
 
-            const exists = appState.friends.some(f => f.username.toLowerCase() === input.toLowerCase());
-            if (exists) {
-                return tg.showAlert("⚠️ Этот пользователь уже добавлен в ваш список!");
-            }
-
-            appState.friends.push({ username: input });
+            appState.isLoggedIn = true;
+            appState.email = email;
+            appState.name = email.split('@')[0];
             saveAppState();
-            renderFriends();
-            closeModal('addFriendModal');
-            document.getElementById('friendInput').value = '';
-            tg.showAlert(`✅ Пользователь ${input} успешно добавлен в друзья!`);
+            syncUI();
+            closeModal('authModal');
+            tg.showAlert("✅ Вход выполнен успешно!");
         }
 
-        function shareInviteLink() {
-            const inviteUrl = "https://t.me/EasyWinClientBot?start=" + (tg.initDataUnsafe?.user?.id || 'ref');
-            tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(inviteUrl) + "&text=" + encodeURIComponent("Присоединяйся к EasyWin Client App!"));
+        function logoutUser() {
+            appState.isLoggedIn = false;
+            saveAppState();
+            location.reload();
         }
 
-        // --- ОПЛАТА МОДАЛКА ---
+        // --- ЗАГРУЗКА АВАТАРКИ ИЗ ГАЛЕРЕИ ---
+        function triggerGallerySelect() {
+            document.getElementById('galleryFileInput').click();
+        }
+
+        function handleGalleryUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    appState.avatarUrl = e.target.result;
+                    saveAppState();
+                    syncUI();
+                    tg.showAlert("🖼 Фото профиля успешно обновлено!");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- СБРОС HWID И КЛЮЧА ---
+        function openHwidResetModal() {
+            document.getElementById('hwidStep1').style.display = 'block';
+            document.getElementById('hwidStep2').style.display = 'none';
+            document.getElementById('hwidStep3').style.display = 'none';
+            document.getElementById('resetEmailInput').value = appState.email || "";
+            document.getElementById('hwidResetModal').style.display = 'flex';
+        }
+
+        function sendResetCode() {
+            const email = document.getElementById('resetEmailInput').value.trim();
+            if (!email) return tg.showAlert("⚠️ Введите ваш Email!");
+            
+            document.getElementById('hwidStep1').style.display = 'none';
+            document.getElementById('hwidStep2').style.display = 'block';
+            tg.showAlert("📩 6-значный код подтверждения отправлен на почту " + email);
+        }
+
+        function verifyResetCode() {
+            const code = document.getElementById('resetCodeInput').value.trim();
+            if (code.length < 4) return tg.showAlert("⚠️ Введите корректный код!");
+
+            // Генерируем ключ
+            const generatedKey = "EW-" + Math.random().toString(36).substring(2, 6).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+            appState.activeKey = generatedKey;
+            appState.subExpires = "30 Дней";
+            saveAppState();
+            syncUI();
+
+            document.getElementById('generatedKeyDisplay').innerText = generatedKey;
+            document.getElementById('hwidStep2').style.display = 'none';
+            document.getElementById('hwidStep3').style.display = 'block';
+        }
+
+        function copyGeneratedKey() {
+            const keyText = document.getElementById('generatedKeyDisplay').innerText;
+            navigator.clipboard.writeText(keyText);
+            tg.showAlert("📋 Ключ скопирован в буфер обмена!");
+        }
+
+        function finishKeyReset() {
+            closeModal('hwidResetModal');
+        }
+
+        // --- МОДАЛКИ И ТАБЫ ---
         let currentPayPrice = 0;
         function openPayModal(title, price) {
             currentPayPrice = price;
@@ -699,22 +681,12 @@
         }
 
         function processPayment() {
-            const method = document.getElementById('paySelectMethod').value;
-            if(method === 'balance') {
-                if(appState.balance < currentPayPrice) {
-                    return tg.showAlert("❌ Недостаточно средств на внутреннем балансе!");
-                }
-                appState.balance -= currentPayPrice;
-                saveAppState();
-                syncUI();
-            }
             closeModal('payModal');
-            tg.showAlert("✅ Запрос на оплату отправлен на сервер!");
+            tg.showAlert("💳 Переход к платежному шлюзу...");
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // --- ТАБЫ ---
         function switchTab(tabName, el) {
             const currentTab = document.querySelector('.tab-content.active');
             const targetTab = document.getElementById('tab-' + tabName);
@@ -737,131 +709,71 @@
             }
         }
 
-        // --- ПРОФИЛЬ ---
         function saveProfile() {
             const name = document.getElementById('inputName').value.trim();
             const mc = document.getElementById('inputMcNick').value.trim();
-            const avatar = document.getElementById('inputAvatarUrl').value.trim();
 
-            if(name) appState.customName = name;
+            if(name) appState.name = name;
             if(mc) appState.mcNick = mc;
-            if(avatar) appState.avatarUrl = avatar;
 
             saveAppState();
             syncUI();
-            tg.showAlert("💾 Изменения профиля сохранены!");
+            tg.showAlert("💾 Профиль сохранен!");
         }
 
-        // --- ЕЖЕДНЕВНЫЙ БОНУС ---
-        function claimDailyReward() {
-            const now = Date.now();
-            if (now - appState.lastDailyReward < 86400000) {
-                return tg.showAlert("⏳ Вы уже получали ежедневный бонус за последние 24 часа!");
-            }
-            appState.lastDailyReward = now;
-            appState.balance += 10;
+        function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher стартует!"); }
+
+        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); saveAppState(); }
+        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; saveAppState(); }
+        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; saveAppState(); }
+        function updateBhColor(v) { appState.bhColor = v; saveAppState(); }
+
+        function toggleEffect(type) {
+            if(type === 'snow') appState.snowEnabled = document.getElementById('toggleSnow').checked;
+            else if(type === 'bh') appState.bhEnabled = document.getElementById('toggleBh').checked;
             saveAppState();
-            syncUI();
-            tg.showAlert("🎁 Вы получили +10 ₽ на ваш баланс!");
         }
 
-        // --- ЭКШЕНЫ ---
-        function activateKey() { tg.showAlert("🔑 Проверка ключа..."); }
-        function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher!"); }
-        function loginGoogle() { tg.showAlert("🌐 Окно авторизации Google..."); }
-        function resetHwid() {
-            document.getElementById('hwidStatus').innerText = "СБРОШЕН";
-            tg.showAlert("🔄 Запрос на сброс HWID отправлен!");
-        }
-        function changeLanguage() { saveAppState(); }
-
-        // --- CANVAS GRAPHICS ENGINE ---
+        // --- CANVAS GRAPHICS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let cw, ch;
 
-        function resize() {
-            cw = canvas.width = window.innerWidth;
-            ch = canvas.height = window.innerHeight;
-        }
+        function resize() { cw = canvas.width = window.innerWidth; ch = canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
         let particles = [];
         function initSnow() {
             particles = [];
-            for(let i=0; i<300; i++) {
-                particles.push({
-                    x: Math.random() * cw,
-                    y: Math.random() * ch,
-                    r: Math.random() * 1.5 + 0.5,
-                    speedMult: Math.random() * 0.8 + 0.2
-                });
-            }
+            for(let i=0; i<200; i++) particles.push({ x: Math.random()*cw, y: Math.random()*ch, r: Math.random()*1.5 + 0.5, speed: Math.random()*0.8 + 0.2 });
         }
 
         function animate() {
             ctx.clearRect(0, 0, cw, ch);
 
-            // Чёрная дыра
             if(appState.bhEnabled) {
-                const centerX = cw/2 + appState.bhX;
-                const centerY = ch/4 + appState.bhY;
-                const radius = 45 * appState.bhScale;
-
-                ctx.save();
-                ctx.translate(centerX, centerY);
-                
+                const centerX = cw/2, centerY = ch/4, radius = 45 * appState.bhScale;
+                ctx.save(); ctx.translate(centerX, centerY);
                 const glow = ctx.createRadialGradient(0, 0, radius*0.8, 0, 0, radius*3.2);
-                glow.addColorStop(0, appState.bhColor);
-                glow.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = glow;
-                ctx.beginPath();
-                ctx.arc(0, 0, radius*3.2, 0, Math.PI*2);
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.arc(0, 0, radius, 0, Math.PI*2);
-                ctx.fillStyle = '#000000';
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.arc(0, 0, radius + 1.5, 0, Math.PI*2);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * appState.bhBright})`;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
+                glow.addColorStop(0, appState.bhColor); glow.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(0, 0, radius*3.2, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI*2); ctx.fillStyle = '#000000'; ctx.fill();
                 ctx.restore();
             }
 
-            // Снег
             if(appState.snowEnabled) {
                 ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                const angleRad = appState.snowAngle * Math.PI / 180;
-                const dirX = Math.sin(angleRad);
-                const dirY = Math.cos(angleRad);
-
-                for(let i = 0; i < appState.snowCount; i++) {
-                    const p = particles[i];
-                    if(!p) break;
-
-                    p.x += (dirX * appState.snowSpeed * p.speedMult) + appState.snowWind;
-                    p.y += (dirY * appState.snowSpeed * p.speedMult);
-
+                for(let i=0; i<appState.snowCount; i++) {
+                    const p = particles[i]; if(!p) break;
+                    p.y += p.speed * appState.snowSpeed;
                     if(p.y > ch) p.y = -10;
-                    if(p.x > cw) p.x = 0;
-                    if(p.x < 0) p.x = cw;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r * appState.snowSize, 0, Math.PI*2);
-                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
                 }
             }
-
             requestAnimationFrame(animate);
         }
 
-        // Запуск
         loadAppState();
         initSnow();
         animate();
