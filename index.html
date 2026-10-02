@@ -136,7 +136,7 @@
         .tariff-price { font-size: 15px; font-weight: 800; color: #fff; }
 
         /* Inputs & Selects */
-        input[type="text"], input[type="email"], input[type="password"], select {
+        input[type="text"], input[type="password"], select {
             width: 100%;
             background: #121420 !important;
             color: #f8fafc !important;
@@ -148,7 +148,7 @@
             background-position: right 14px center !important;
             background-size: 15px !important;
         }
-        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+        input[type="text"]:focus, input[type="password"]:focus, select:focus {
             border-color: var(--primary) !important;
         }
 
@@ -170,9 +170,6 @@
         .btn-danger {
             background: rgba(255, 71, 87, 0.15); color: var(--danger);
             border: 1px solid rgba(255, 71, 87, 0.3);
-        }
-        .btn-danger:hover {
-            background: rgba(255, 71, 87, 0.25);
         }
 
         /* Switches & Sliders */
@@ -230,18 +227,28 @@
             padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 14px;
         }
 
-        .key-box {
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px dashed var(--primary);
-            border-radius: 12px; padding: 14px;
-            text-align: center; font-family: monospace; font-size: 16px; font-weight: 700;
-            color: #2ed573; letter-spacing: 1px;
+        /* Server Offline Screen Overlay */
+        #serverOfflineModal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #06070a; z-index: 999; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
         }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
+
+    <!-- БЛОКИРОВЩИК: ЕСЛИ СЕРВЕР ВЫКЛЮЧЕН -->
+    <div id="serverOfflineModal">
+        <div style="font-size: 50px; margin-bottom: 16px;">🔴</div>
+        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 8px; color: #ff4757;">Сервер недоступен</h2>
+        <p style="font-size: 13px; color: var(--text-muted); max-width: 300px; line-height: 1.5; margin-bottom: 20px;">
+            Не удалось связаться с бэкендом EasyWin. Пожалуйста, убедитесь, что скрипт <b>server.py</b> запущен!
+        </p>
+        <button class="btn btn-glow" onclick="checkServerHealth()">🔄 Повторить подключение</button>
+    </div>
 
     <!-- Скрытый элемент для выбора фотографии из галереи -->
     <input type="file" id="galleryFileInput" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
@@ -329,14 +336,14 @@
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <button class="btn btn-secondary" onclick="triggerGallerySelect()">🖼 Загрузить фото из галереи</button>
                     <div>
-                        <label style="font-size: 11px; color: var(--text-muted);">Имя пользователя:</label>
-                        <input type="text" id="inputName" placeholder="Ваше имя">
+                        <label style="font-size: 11px; color: var(--text-muted);">Имя пользователя / Логин:</label>
+                        <input type="text" id="inputName" readonly style="opacity:0.7;">
                     </div>
                     <div>
                         <label style="font-size: 11px; color: var(--text-muted);">Ник в Minecraft:</label>
                         <input type="text" id="inputMcNick" placeholder="Steve_Pro">
                     </div>
-                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить профиль</button>
+                    <button class="btn btn-glow" onclick="saveProfile()">Сохранить изменения</button>
                 </div>
             </div>
 
@@ -348,7 +355,6 @@
                 </div>
             </div>
 
-            <!-- КНОПКА ВЫХОДА В ПРОФИЛЕ -->
             <div class="card">
                 <button class="btn btn-danger" onclick="logoutUser()">🚪 Выйти из аккаунта (Logout)</button>
             </div>
@@ -356,14 +362,6 @@
 
         <!-- ТАБ 4: НАСТРОЙКИ -->
         <div id="tab-settings" class="tab-content">
-            <div class="card">
-                <div class="card-title">🔄 Сброс HWID и Восстановление Ключа</div>
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
-                    При сбросе HWID на вашу почту придет код подтверждения. После ввода кода вы сможете один раз скопировать ваш ключ.
-                </p>
-                <button class="btn btn-glow" onclick="openHwidResetModal()">Сбросить HWID / Восстановить Ключ</button>
-            </div>
-
             <div class="card">
                 <div class="card-title">⚙️ Графика и Анимации</div>
                 
@@ -442,7 +440,7 @@
             
             <!-- ФОРМА ВХОДА -->
             <div id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Email почта" style="margin-bottom: 8px;">
+                <input type="text" id="loginName" placeholder="Логин" style="margin-bottom: 8px;">
                 <input type="password" id="loginPassword" placeholder="Пароль" style="margin-bottom: 12px;">
                 <button class="btn btn-glow" onclick="submitLogin()">Войти</button>
                 <button class="btn btn-secondary" style="margin-top: 8px;" onclick="toggleAuthMode('register')">Создать аккаунт</button>
@@ -450,7 +448,6 @@
 
             <!-- ФОРМА РЕГИСТРАЦИИ -->
             <div id="registerForm" style="display: none;">
-                <input type="email" id="regEmail" placeholder="Email почта" style="margin-bottom: 8px;">
                 <input type="text" id="regName" placeholder="Логин (мин. 3 буквы, без спецсимволов)" style="margin-bottom: 8px;">
                 <input type="text" id="regMcNick" placeholder="Ник в Minecraft" style="margin-bottom: 8px;">
                 <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)" style="margin-bottom: 12px;">
@@ -460,39 +457,7 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО 2: СБРОС HWID (Код из Email) -->
-    <div class="modal-overlay" id="hwidResetModal">
-        <div class="modal-body">
-            <div class="card-title">🔄 Сброс HWID и Восстановление Ключа</div>
-            
-            <!-- Шаг 1: Ввод почты -->
-            <div id="hwidStep1">
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Введите вашу привязанную почту для получения кода:</p>
-                <input type="email" id="resetEmailInput" placeholder="your@email.com" style="margin-bottom: 12px;">
-                <button class="btn btn-glow" onclick="sendResetCode()">Отправить код на Email</button>
-                <button class="btn btn-secondary" style="margin-top: 8px;" onclick="closeModal('hwidResetModal')">Отмена</button>
-            </div>
-
-            <!-- Шаг 2: Ввод кода -->
-            <div id="hwidStep2" style="display: none;">
-                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Введи 6-значный код из письма:</p>
-                <input type="text" id="resetCodeInput" placeholder="123456" style="margin-bottom: 12px; text-align: center; font-size: 18px; letter-spacing: 4px;">
-                <button class="btn btn-glow" onclick="verifyResetCode()">Подтвердить код</button>
-            </div>
-
-            <!-- Шаг 3: Вывод ключа -->
-            <div id="hwidStep3" style="display: none;">
-                <p style="font-size: 11px; color: #ff4757; font-weight: 700; text-align: center;">
-                    ⚠️ СКОПИРУЙТЕ И СОХРАНИТЕ КЛЮЧ! ОН БОЛЬШЕ НЕ БУДЕТ ПОКАЗАН!
-                </p>
-                <div class="key-box" id="generatedKeyDisplay">EW-89F2-K92A-881A</div>
-                <button class="btn btn-glow" onclick="copyGeneratedKey()">📋 Скопировать Ключ</button>
-                <button class="btn btn-secondary" style="margin-top: 8px;" onclick="finishKeyReset()">Закрыть</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- МОДАЛЬНОЕ ОКНО 3: ОПЛАТА -->
+    <!-- МОДАЛЬНОЕ ОКНО 2: ОПЛАТА -->
     <div class="modal-overlay" id="payModal">
         <div class="modal-body">
             <div class="card-title"><span id="payModalTitle">Оплата</span></div>
@@ -514,54 +479,84 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const API_URL = "http://localhost:8000"; // Измени на IP/домен твоего бэкенда
+        const API_URL = "http://localhost:8000"; // Замени на IP/домен вашего сервера
 
         let appState = {
+            id: null,
             isLoggedIn: false,
-            email: "",
             name: "",
-            mcNick: "",
+            mcNick: "Steve",
             avatarUrl: "",
             activeKey: "",
             subExpires: "",
             snowEnabled: true,
-            bhEnabled: true,
             snowCount: 120,
             snowSpeed: 2.0,
+            bhEnabled: true,
             bhScale: 1.0,
             bhColor: "#8b5cf6"
         };
 
-        // ВАЛИДАЦИЯ ИМЕНИ: Мин 3 символа, только буквы (Ru/En), цифры и '_'. Спецсимволы, пробелы и эмодзи ЗАПРЕЩЕНЫ.
         function isValidName(name) {
             const re = /^[a-zA-Z0-9а-яА-ЯёЁ_]{3,}$/;
             return re.test(name);
         }
 
-        // ВАЛИДАЦИЯ EMAIL
-        function isValidEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(String(email).toLowerCase());
+        // --- 1. ПРОВЕРКА ДОСТУПНОСТИ СЕРВЕРА ---
+        async function checkServerHealth() {
+            try {
+                const res = await fetch(`${API_URL}/api/health`, { method: 'GET' });
+                if (res.ok) {
+                    document.getElementById('serverOfflineModal').style.display = 'none';
+                    initAppSession();
+                } else {
+                    throw new Error();
+                }
+            } catch(e) {
+                document.getElementById('serverOfflineModal').style.display = 'flex';
+            }
         }
 
-        function loadAppState() {
-            const saved = localStorage.getItem('easywin_user_session');
-            if (saved) {
+        // --- 2. ИНИЦИАЛИЗАЦИЯ И АВТО-ВХОД ---
+        async function initAppSession() {
+            const savedSession = localStorage.getItem('easywin_user_auth');
+            if (savedSession) {
                 try {
-                    const parsed = JSON.parse(saved);
-                    Object.assign(appState, parsed);
-                } catch(e){}
+                    const creds = JSON.parse(savedSession);
+                    // Авторизуемся на сервере заново для получения свежих данных из БД
+                    const res = await fetch(`${API_URL}/api/auth/login`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ name: creds.name, password: creds.password })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        applyUserData(data.user);
+                        return;
+                    }
+                } catch(e) {}
             }
+            // Если сессии нет или ошибка - показываем окно авторизации
+            document.getElementById('authModal').style.display = 'flex';
+        }
 
-            if (!appState.isLoggedIn) {
-                document.getElementById('authModal').style.display = 'flex';
-            }
+        function applyUserData(user) {
+            appState.id = user.id;
+            appState.isLoggedIn = true;
+            appState.name = user.name;
+            appState.mcNick = user.mc_nick;
+            appState.avatarUrl = user.avatar_url || "";
+            appState.snowEnabled = user.snow_enabled;
+            appState.snowCount = user.snow_count;
+            appState.snowSpeed = user.snow_speed;
+            appState.bhEnabled = user.bh_enabled;
+            appState.bhScale = user.bh_scale;
+            appState.bhColor = user.bh_color;
+            appState.activeKey = user.active_key;
+            appState.subExpires = user.expires_at;
 
             syncUI();
-        }
-
-        function saveAppState() {
-            localStorage.setItem('easywin_user_session', JSON.stringify(appState));
+            initSnow();
         }
 
         function syncUI() {
@@ -580,11 +575,44 @@
             document.getElementById('profileSubExpires').innerText = appState.subExpires || "Нет активной подписки";
             document.getElementById('homeTabTariff').innerText = appState.subExpires ? "ПРИВАТНЫЙ ДОСТУП" : "FREE BETA";
 
+            // Синхронизация слайдеров
             document.getElementById('toggleSnow').checked = appState.snowEnabled;
             document.getElementById('toggleBh').checked = appState.bhEnabled;
+            document.getElementById('sCount').value = appState.snowCount;
+            document.getElementById('valCount').innerText = appState.snowCount;
+            document.getElementById('sSpeed').value = appState.snowSpeed;
+            document.getElementById('valSpeed').innerText = appState.snowSpeed;
+            document.getElementById('bhScale').value = appState.bhScale;
+            document.getElementById('valBhScale').innerText = appState.bhScale;
+            document.getElementById('bhColor').value = appState.bhColor;
+
+            document.getElementById('snowSettingsCard').style.display = appState.snowEnabled ? 'block' : 'none';
+            document.getElementById('bhSettingsCard').style.display = appState.bhEnabled ? 'block' : 'none';
         }
 
-        // --- АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ С ВАЛИДАЦИЕЙ ---
+        // --- 3. СОХРАНЕНИЕ НАСТРОЕК В БАЗУ ДАННЫХ ---
+        async function syncSettingsWithServer() {
+            if (!appState.isLoggedIn || !appState.id) return;
+            try {
+                await fetch(`${API_URL}/api/user/save-settings`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        user_id: appState.id,
+                        mc_nick: appState.mcNick,
+                        avatar_url: appState.avatarUrl,
+                        snow_enabled: appState.snowEnabled,
+                        snow_count: appState.snowCount,
+                        snow_speed: appState.snowSpeed,
+                        bh_enabled: appState.bhEnabled,
+                        bh_scale: appState.bhScale,
+                        bh_color: appState.bhColor
+                    })
+                });
+            } catch(e){}
+        }
+
+        // --- ВХОД И РЕГИСТРАЦИЯ ---
         function toggleAuthMode(mode) {
             if (mode === 'register') {
                 document.getElementById('authModalTitle').innerText = "Регистрация";
@@ -598,118 +626,77 @@
         }
 
         async function submitRegister() {
-            const email = document.getElementById('regEmail').value.trim();
             const name = document.getElementById('regName').value.trim();
             const mc = document.getElementById('regMcNick').value.trim();
             const pass = document.getElementById('regPassword').value.trim();
 
-            if (!email || !name || !pass) {
-                return tg.showAlert("⚠️ Заполните все обязательные поля!");
-            }
-
-            if (!isValidName(name)) {
-                return tg.showAlert("⚠️ Имя/Логин должен содержать не менее 3 символов, без пробелов, спецсимволов и эмодзи!");
-            }
-
-            if (!isValidEmail(email)) {
-                return tg.showAlert("⚠️ Введите корректный Email адрес (например: name@gmail.com)!");
-            }
-
-            if (pass.length < 6) {
-                return tg.showAlert("⚠️ Длина пароля должна быть не менее 6 символов!");
-            }
+            if (!name || !pass) return tg.showAlert("⚠️ Заполните логин и пароль!");
+            if (!isValidName(name)) return tg.showAlert("⚠️ Логин должен быть от 3 символов, без пробелов и эмодзи!");
+            if (pass.length < 6) return tg.showAlert("⚠️ Пароль минимум 6 символов!");
 
             try {
                 const res = await fetch(`${API_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, password: pass, name, mc_nick: mc || "Steve" })
+                    body: JSON.stringify({ name, password: pass, mc_nick: mc || "Steve" })
                 });
                 const data = await res.json();
+                if (!res.ok) throw new Error(data.detail);
 
-                if (!res.ok) {
-                    throw new Error(data.detail || "Ошибка регистрации");
-                }
-
-                appState.isLoggedIn = true;
-                appState.email = email;
-                appState.name = name;
-                appState.mcNick = mc || "Steve";
-
-                saveAppState();
-                syncUI();
+                // Сохраняем сессию
+                localStorage.setItem('easywin_user_auth', JSON.stringify({ name, password: pass }));
+                applyUserData(data.user);
                 closeModal('authModal');
-                tg.showAlert("🎉 Регистрация успешна! Вы вошли в аккаунт.");
+                tg.showAlert("🎉 Регистрация успешна!");
             } catch(err) {
                 tg.showAlert("❌ " + err.message);
             }
         }
 
         async function submitLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
+            const name = document.getElementById('loginName').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
 
-            if (!email || !pass) {
-                return tg.showAlert("⚠️ Заполните все поля для входа!");
-            }
-
-            if (!isValidEmail(email)) {
-                return tg.showAlert("⚠️ Введите корректный адрес почты (например: user@mail.com)!");
-            }
+            if (!name || !pass) return tg.showAlert("⚠️ Заполните все поля!");
 
             try {
                 const res = await fetch(`${API_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, password: pass })
+                    body: JSON.stringify({ name, password: pass })
                 });
                 const data = await res.json();
+                if (!res.ok) throw new Error(data.detail);
 
-                if (!res.ok) {
-                    throw new Error(data.detail || "Неправильный Email или пароль!");
-                }
-
-                appState.isLoggedIn = true;
-                appState.email = data.user.email;
-                appState.name = data.user.name;
-                appState.mcNick = data.user.mc_nick;
-                appState.activeKey = data.user.active_key;
-                appState.subExpires = data.user.expires_at;
-
-                saveAppState();
-                syncUI();
+                // Сохраняем сессию для авто-входа
+                localStorage.setItem('easywin_user_auth', JSON.stringify({ name, password: pass }));
+                applyUserData(data.user);
                 closeModal('authModal');
-                tg.showAlert("✅ Вы успешно вошли в аккаунт!");
+                tg.showAlert("✅ Вы вошли в аккаунт!");
             } catch(err) {
                 tg.showAlert("❌ " + err.message);
             }
         }
 
-        // --- ЛОГАУТ (ВЫХОД ИЗ АККАУНТА) ---
         function logoutUser() {
+            localStorage.removeItem('easywin_user_auth');
             appState.isLoggedIn = false;
-            appState.email = "";
-            appState.name = "";
-            appState.mcNick = "";
-            appState.avatarUrl = "";
-            appState.activeKey = "";
-            appState.subExpires = "";
-
-            saveAppState();
-            syncUI();
-
-            // Переключаем вкладку на Главную и открываем модалку авторизации
-            switchTab('home', document.querySelectorAll('.nav-item')[0]);
-            toggleAuthMode('login');
+            appState.id = null;
             document.getElementById('authModal').style.display = 'flex';
-
-            tg.showAlert("🚪 Вы успешно вышли из аккаунта!");
+            toggleAuthMode('login');
+            tg.showAlert("🚪 Вы вышли из аккаунта!");
         }
 
-        // --- ЗАГРУЗКА АВАТАРКИ ИЗ ГАЛЕРЕИ ---
-        function triggerGallerySelect() {
-            document.getElementById('galleryFileInput').click();
+        // --- СОХРАНЕНИЕ ПРОФИЛЯ И АВАТАРА ---
+        function saveProfile() {
+            const mc = document.getElementById('inputMcNick').value.trim();
+            if (mc) appState.mcNick = mc;
+            syncUI();
+            syncSettingsWithServer();
+            tg.showAlert("💾 Изменения профиля сохранены в БД!");
         }
+
+        function triggerGallerySelect() { document.getElementById('galleryFileInput').click(); }
 
         function handleGalleryUpload(event) {
             const file = event.target.files[0];
@@ -717,89 +704,36 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     appState.avatarUrl = e.target.result;
-                    saveAppState();
                     syncUI();
-                    tg.showAlert("🖼 Фото профиля успешно обновлено!");
+                    syncSettingsWithServer();
+                    tg.showAlert("🖼 Фото профиля обновлено!");
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // --- СБРОС HWID И КЛЮЧА ---
-        function openHwidResetModal() {
-            document.getElementById('hwidStep1').style.display = 'block';
-            document.getElementById('hwidStep2').style.display = 'none';
-            document.getElementById('hwidStep3').style.display = 'none';
-            document.getElementById('resetEmailInput').value = appState.email || "";
-            document.getElementById('hwidResetModal').style.display = 'flex';
+        // --- ЭФФЕКТЫ ---
+        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); syncSettingsWithServer(); }
+        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; syncSettingsWithServer(); }
+        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; syncSettingsWithServer(); }
+        function updateBhColor(v) { appState.bhColor = v; syncSettingsWithServer(); }
+
+        function toggleEffect(type) {
+            if(type === 'snow') appState.snowEnabled = document.getElementById('toggleSnow').checked;
+            else if(type === 'bh') appState.bhEnabled = document.getElementById('toggleBh').checked;
+            syncUI();
+            syncSettingsWithServer();
         }
 
-        async function sendResetCode() {
-            const email = document.getElementById('resetEmailInput').value.trim();
-            if (!email || !isValidEmail(email)) return tg.showAlert("⚠️ Введите корректный Email!");
-            
-            try {
-                const res = await fetch(`${API_URL}/api/hwid/request-reset`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email })
-                });
-                const data = await res.json();
-                if(!res.ok) throw new Error(data.detail);
+        function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher!"); }
 
-                document.getElementById('hwidStep1').style.display = 'none';
-                document.getElementById('hwidStep2').style.display = 'block';
-                tg.showAlert("📩 Код подтверждения отправлен на почту " + email);
-            } catch(err) {
-                tg.showAlert("❌ " + err.message);
-            }
-        }
-
-        async function verifyResetCode() {
-            const email = document.getElementById('resetEmailInput').value.trim();
-            const code = document.getElementById('resetCodeInput').value.trim();
-
-            try {
-                const res = await fetch(`${API_URL}/api/hwid/confirm-reset`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, code })
-                });
-                const data = await res.json();
-                if(!res.ok) throw new Error(data.detail);
-
-                document.getElementById('generatedKeyDisplay').innerText = data.key_code;
-                document.getElementById('hwidStep2').style.display = 'none';
-                document.getElementById('hwidStep3').style.display = 'block';
-            } catch(err) {
-                tg.showAlert("❌ " + err.message);
-            }
-        }
-
-        function copyGeneratedKey() {
-            const keyText = document.getElementById('generatedKeyDisplay').innerText;
-            navigator.clipboard.writeText(keyText);
-            tg.showAlert("📋 Ключ скопирован в буфер обмена!");
-        }
-
-        function finishKeyReset() {
-            closeModal('hwidResetModal');
-        }
-
-        // --- МОДАЛКИ И ТАБЫ ---
-        let currentPayPrice = 0;
         function openPayModal(title, price) {
-            currentPayPrice = price;
             document.getElementById('payModalTitle').innerText = title;
             document.getElementById('payModalPrice').innerText = price + " ₽";
             document.getElementById('payModal').style.display = 'flex';
         }
 
-        function processPayment() {
-            closeModal('payModal');
-            tg.showAlert("💳 Переход к платежному шлюзу...");
-        }
-
+        function processPayment() { closeModal('payModal'); tg.showAlert("💳 Запрос оплаты отправлен!"); }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function switchTab(tabName, el) {
@@ -824,36 +758,7 @@
             }
         }
 
-        function saveProfile() {
-            const name = document.getElementById('inputName').value.trim();
-            const mc = document.getElementById('inputMcNick').value.trim();
-
-            if (name && !isValidName(name)) {
-                return tg.showAlert("⚠️ Имя пользователя должно состоять минимум из 3 символов, без пробелов, спецсимволов и эмодзи!");
-            }
-
-            if(name) appState.name = name;
-            if(mc) appState.mcNick = mc;
-
-            saveAppState();
-            syncUI();
-            tg.showAlert("💾 Профиль сохранен!");
-        }
-
-        function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher стартует!"); }
-
-        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); saveAppState(); }
-        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; saveAppState(); }
-        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; saveAppState(); }
-        function updateBhColor(v) { appState.bhColor = v; saveAppState(); }
-
-        function toggleEffect(type) {
-            if(type === 'snow') appState.snowEnabled = document.getElementById('toggleSnow').checked;
-            else if(type === 'bh') appState.bhEnabled = document.getElementById('toggleBh').checked;
-            saveAppState();
-        }
-
-        // --- ДВИЖОК ГРАФИКИ CANVAS ---
+        // --- CANVAS GRAPHICS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let cw, ch;
@@ -893,8 +798,8 @@
             requestAnimationFrame(animate);
         }
 
-        loadAppState();
-        initSnow();
+        // СТАРТ
+        checkServerHealth();
         animate();
     </script>
 </body>
