@@ -236,12 +236,12 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Скрытый вход для загрузки аватарки из галереи -->
+    <!-- Скрытый элемент для выбора фотографии из галереи -->
     <input type="file" id="galleryFileInput" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
 
     <div class="container">
         
-        <!-- Top Profile Capsule -->
+        <!-- Верхняя капсула профиля -->
         <div class="top-header">
             <div class="user-info">
                 <div class="avatar-circle" id="avatarContainer" onclick="triggerGallerySelect()" title="Нажмите, чтобы сменить фото">
@@ -255,7 +255,7 @@
             <div class="brand-badge">EASYWIN</div>
         </div>
 
-        <!-- TAB 1: HOME -->
+        <!-- ТАБ 1: ГЛАВНАЯ -->
         <div id="tab-home" class="tab-content active">
             <div class="card">
                 <div class="card-title">🚀 О клиенте EasyWin</div>
@@ -280,7 +280,7 @@
             </div>
         </div>
 
-        <!-- TAB 2: STORE -->
+        <!-- ТАБ 2: МАГАЗИН -->
         <div id="tab-store" class="tab-content">
             <div class="card">
                 <div class="card-title">🛒 Подписки EasyWin</div>
@@ -315,7 +315,7 @@
             </div>
         </div>
 
-        <!-- TAB 3: PROFILE -->
+        <!-- ТАБ 3: ПРОФИЛЬ -->
         <div id="tab-profile" class="tab-content">
             <div class="card">
                 <div class="card-title">👤 Мой Профиль</div>
@@ -342,7 +342,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: SETTINGS -->
+        <!-- ТАБ 4: НАСТРОЙКИ -->
         <div id="tab-settings" class="tab-content">
             <div class="card">
                 <div class="card-title">🔄 Сброс HWID и Восстановление Ключа</div>
@@ -403,7 +403,7 @@
 
     </div>
 
-    <!-- Bottom Nav Bar -->
+    <!-- Нижняя панель навигации -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home', this)">
             <span class="nav-icon">🏠</span>
@@ -418,12 +418,12 @@
             <span>Профиль</span>
         </div>
         <div class="nav-item" onclick="switchTab('settings', this)">
-            <span class="nav-icon">⚙️</span>
+            <span class="nav-icon">⚙️️</span>
             <span>Настройки</span>
         </div>
     </div>
 
-    <!-- MODAL 1: AUTH (Вход / Регистрация) -->
+    <!-- МОДАЛЬНОЕ ОКНО 1: АВТОРИЗАЦИЯ (Вход / Регистрация) -->
     <div class="modal-overlay" id="authModal">
         <div class="modal-body">
             <div class="card-title"><span id="authModalTitle">Вход в EasyWin</span></div>
@@ -439,14 +439,14 @@
                 <input type="email" id="regEmail" placeholder="Email почта" style="margin-bottom: 8px;">
                 <input type="text" id="regName" placeholder="Ваше Имя" style="margin-bottom: 8px;">
                 <input type="text" id="regMcNick" placeholder="Ник в Minecraft" style="margin-bottom: 8px;">
-                <input type="password" id="regPassword" placeholder="Пароль" style="margin-bottom: 12px;">
+                <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)" style="margin-bottom: 12px;">
                 <button class="btn btn-glow" onclick="submitRegister()">Зарегистрироваться</button>
                 <button class="btn btn-secondary" style="margin-top: 8px;" onclick="toggleAuthMode('login')">Уже есть аккаунт</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 2: HWID & KEY RESET (Подтверждение по Email) -->
+    <!-- МОДАЛЬНОЕ ОКНО 2: СБРОС HWID (Код из Email) -->
     <div class="modal-overlay" id="hwidResetModal">
         <div class="modal-body">
             <div class="card-title">🔄 Сброс HWID и Восстановление Ключа</div>
@@ -466,7 +466,7 @@
                 <button class="btn btn-glow" onclick="verifyResetCode()">Подтвердить код</button>
             </div>
 
-            <!-- Шаг 3: Вывод ключа (Единождо!) -->
+            <!-- Шаг 3: Вывод ключа -->
             <div id="hwidStep3" style="display: none;">
                 <p style="font-size: 11px; color: #ff4757; font-weight: 700; text-align: center;">
                     ⚠️ СКОПИРУЙТЕ И СОХРАНИТЕ КЛЮЧ! ОН БОЛЬШЕ НЕ БУДЕТ ПОКАЗАН!
@@ -478,7 +478,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: PAYMENT -->
+    <!-- МОДАЛЬНОЕ ОКНО 3: ОПЛАТА -->
     <div class="modal-overlay" id="payModal">
         <div class="modal-body">
             <div class="card-title"><span id="payModalTitle">Оплата</span></div>
@@ -500,6 +500,8 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        const API_URL = "http://localhost:8000"; // Измени на IP/домен твоего FastAPI бэкенда
+
         let appState = {
             isLoggedIn: false,
             email: "",
@@ -515,6 +517,12 @@
             bhScale: 1.0,
             bhColor: "#8b5cf6"
         };
+
+        // Регулярное выражение для строгого формата Email
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
 
         function loadAppState() {
             const saved = localStorage.getItem('easywin_user_session');
@@ -556,7 +564,7 @@
             document.getElementById('toggleBh').checked = appState.bhEnabled;
         }
 
-        // --- ВХОД И РЕГИСТРАЦИЯ ---
+        // --- АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ С ВАЛИДАЦИЕЙ ---
         function toggleAuthMode(mode) {
             if (mode === 'register') {
                 document.getElementById('authModalTitle').innerText = "Регистрация";
@@ -569,37 +577,88 @@
             }
         }
 
-        function submitRegister() {
+        async function submitRegister() {
             const email = document.getElementById('regEmail').value.trim();
             const name = document.getElementById('regName').value.trim();
             const mc = document.getElementById('regMcNick').value.trim();
             const pass = document.getElementById('regPassword').value.trim();
 
-            if (!email || !name || !pass) return tg.showAlert("⚠️ Заполните все обязательные поля!");
+            if (!email || !name || !pass) {
+                return tg.showAlert("⚠️ Заполните все обязательные поля!");
+            }
 
-            appState.isLoggedIn = true;
-            appState.email = email;
-            appState.name = name;
-            appState.mcNick = mc || "Steve";
-            saveAppState();
-            syncUI();
-            closeModal('authModal');
-            tg.showAlert("🎉 Регистрация успешна! Добро пожаловать.");
+            if (!isValidEmail(email)) {
+                return tg.showAlert("⚠️ Введите корректный Email адрес (например: name@gmail.com)!");
+            }
+
+            if (pass.length < 6) {
+                return tg.showAlert("⚠️ Длина пароля должна быть не менее 6 символов!");
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email, password: pass, name, mc_nick: mc || "Steve" })
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.detail || "Ошибка регистрации");
+                }
+
+                appState.isLoggedIn = true;
+                appState.email = email;
+                appState.name = name;
+                appState.mcNick = mc || "Steve";
+
+                saveAppState();
+                syncUI();
+                closeModal('authModal');
+                tg.showAlert("🎉 Регистрация успешна! Вы вошли в аккаунт.");
+            } catch(err) {
+                tg.showAlert("❌ " + err.message);
+            }
         }
 
-        function submitLogin() {
+        async function submitLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
 
-            if (!email || !pass) return tg.showAlert("⚠️ Введите email и пароль!");
+            if (!email || !pass) {
+                return tg.showAlert("⚠️ Заполните все поля для входа!");
+            }
 
-            appState.isLoggedIn = true;
-            appState.email = email;
-            appState.name = email.split('@')[0];
-            saveAppState();
-            syncUI();
-            closeModal('authModal');
-            tg.showAlert("✅ Вход выполнен успешно!");
+            if (!isValidEmail(email)) {
+                return tg.showAlert("⚠️ Введите корректный адрес почты (например: user@mail.com)!");
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email, password: pass })
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.detail || "Неправильный Email или пароль!");
+                }
+
+                appState.isLoggedIn = true;
+                appState.email = data.user.email;
+                appState.name = data.user.name;
+                appState.mcNick = data.user.mc_nick;
+                appState.activeKey = data.user.active_key;
+                appState.subExpires = data.user.expires_at;
+
+                saveAppState();
+                syncUI();
+                closeModal('authModal');
+                tg.showAlert("✅ Вы успешно вошли в аккаунт!");
+            } catch(err) {
+                tg.showAlert("❌ " + err.message);
+            }
         }
 
         function logoutUser() {
@@ -636,29 +695,46 @@
             document.getElementById('hwidResetModal').style.display = 'flex';
         }
 
-        function sendResetCode() {
+        async function sendResetCode() {
             const email = document.getElementById('resetEmailInput').value.trim();
-            if (!email) return tg.showAlert("⚠️ Введите ваш Email!");
+            if (!email || !isValidEmail(email)) return tg.showAlert("⚠️ Введите корректный Email!");
             
-            document.getElementById('hwidStep1').style.display = 'none';
-            document.getElementById('hwidStep2').style.display = 'block';
-            tg.showAlert("📩 6-значный код подтверждения отправлен на почту " + email);
+            try {
+                const res = await fetch(`${API_URL}/api/hwid/request-reset`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if(!res.ok) throw new Error(data.detail);
+
+                document.getElementById('hwidStep1').style.display = 'none';
+                document.getElementById('hwidStep2').style.display = 'block';
+                tg.showAlert("📩 Код подтверждения отправлен на почту " + email);
+            } catch(err) {
+                tg.showAlert("❌ " + err.message);
+            }
         }
 
-        function verifyResetCode() {
+        async function verifyResetCode() {
+            const email = document.getElementById('resetEmailInput').value.trim();
             const code = document.getElementById('resetCodeInput').value.trim();
-            if (code.length < 4) return tg.showAlert("⚠️ Введите корректный код!");
 
-            // Генерируем ключ
-            const generatedKey = "EW-" + Math.random().toString(36).substring(2, 6).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
-            appState.activeKey = generatedKey;
-            appState.subExpires = "30 Дней";
-            saveAppState();
-            syncUI();
+            try {
+                const res = await fetch(`${API_URL}/api/hwid/confirm-reset`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email, code })
+                });
+                const data = await res.json();
+                if(!res.ok) throw new Error(data.detail);
 
-            document.getElementById('generatedKeyDisplay').innerText = generatedKey;
-            document.getElementById('hwidStep2').style.display = 'none';
-            document.getElementById('hwidStep3').style.display = 'block';
+                document.getElementById('generatedKeyDisplay').innerText = data.key_code;
+                document.getElementById('hwidStep2').style.display = 'none';
+                document.getElementById('hwidStep3').style.display = 'block';
+            } catch(err) {
+                tg.showAlert("❌ " + err.message);
+            }
         }
 
         function copyGeneratedKey() {
@@ -734,7 +810,7 @@
             saveAppState();
         }
 
-        // --- CANVAS GRAPHICS ---
+        // --- ДВИЖОК ГРАФИКИ CANVAS ---
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let cw, ch;
