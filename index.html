@@ -167,6 +167,13 @@
             background: rgba(255, 255, 255, 0.06); color: var(--text-main);
             border: 1px solid var(--glass-border);
         }
+        .btn-danger {
+            background: rgba(255, 71, 87, 0.15); color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+        .btn-danger:hover {
+            background: rgba(255, 71, 87, 0.25);
+        }
 
         /* Switches & Sliders */
         .switch-container {
@@ -340,6 +347,11 @@
                     <div>Срок подписки: <b style="color:#fff;" id="profileSubExpires">Нет активной подписки</b></div>
                 </div>
             </div>
+
+            <!-- КНОПКА ВЫХОДА В ПРОФИЛЕ -->
+            <div class="card">
+                <button class="btn btn-danger" onclick="logoutUser()">🚪 Выйти из аккаунта (Logout)</button>
+            </div>
         </div>
 
         <!-- ТАБ 4: НАСТРОЙКИ -->
@@ -371,7 +383,7 @@
                     </label>
                 </div>
 
-                <button class="btn btn-secondary" style="margin-top: 10px;" onclick="logoutUser()">🚪 Выйти из аккаунта</button>
+                <button class="btn btn-danger" style="margin-top: 10px;" onclick="logoutUser()">🚪 Выйти из аккаунта</button>
             </div>
 
             <!-- Настройки снега -->
@@ -418,7 +430,7 @@
             <span>Профиль</span>
         </div>
         <div class="nav-item" onclick="switchTab('settings', this)">
-            <span class="nav-icon">⚙️️</span>
+            <span class="nav-icon">⚙️</span>
             <span>Настройки</span>
         </div>
     </div>
@@ -428,6 +440,7 @@
         <div class="modal-body">
             <div class="card-title"><span id="authModalTitle">Вход в EasyWin</span></div>
             
+            <!-- ФОРМА ВХОДА -->
             <div id="loginForm">
                 <input type="email" id="loginEmail" placeholder="Email почта" style="margin-bottom: 8px;">
                 <input type="password" id="loginPassword" placeholder="Пароль" style="margin-bottom: 12px;">
@@ -435,9 +448,10 @@
                 <button class="btn btn-secondary" style="margin-top: 8px;" onclick="toggleAuthMode('register')">Создать аккаунт</button>
             </div>
 
+            <!-- ФОРМА РЕГИСТРАЦИИ -->
             <div id="registerForm" style="display: none;">
                 <input type="email" id="regEmail" placeholder="Email почта" style="margin-bottom: 8px;">
-                <input type="text" id="regName" placeholder="Ваше Имя" style="margin-bottom: 8px;">
+                <input type="text" id="regName" placeholder="Логин (мин. 3 буквы, без спецсимволов)" style="margin-bottom: 8px;">
                 <input type="text" id="regMcNick" placeholder="Ник в Minecraft" style="margin-bottom: 8px;">
                 <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)" style="margin-bottom: 12px;">
                 <button class="btn btn-glow" onclick="submitRegister()">Зарегистрироваться</button>
@@ -500,7 +514,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const API_URL = "http://localhost:8000"; // Измени на IP/домен твоего FastAPI бэкенда
+        const API_URL = "http://localhost:8000"; // Измени на IP/домен твоего бэкенда
 
         let appState = {
             isLoggedIn: false,
@@ -518,7 +532,13 @@
             bhColor: "#8b5cf6"
         };
 
-        // Регулярное выражение для строгого формата Email
+        // ВАЛИДАЦИЯ ИМЕНИ: Мин 3 символа, только буквы (Ru/En), цифры и '_'. Спецсимволы, пробелы и эмодзи ЗАПРЕЩЕНЫ.
+        function isValidName(name) {
+            const re = /^[a-zA-Z0-9а-яА-ЯёЁ_]{3,}$/;
+            return re.test(name);
+        }
+
+        // ВАЛИДАЦИЯ EMAIL
         function isValidEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(String(email).toLowerCase());
@@ -585,6 +605,10 @@
 
             if (!email || !name || !pass) {
                 return tg.showAlert("⚠️ Заполните все обязательные поля!");
+            }
+
+            if (!isValidName(name)) {
+                return tg.showAlert("⚠️ Имя/Логин должен содержать не менее 3 символов, без пробелов, спецсимволов и эмодзи!");
             }
 
             if (!isValidEmail(email)) {
@@ -661,10 +685,25 @@
             }
         }
 
+        // --- ЛОГАУТ (ВЫХОД ИЗ АККАУНТА) ---
         function logoutUser() {
             appState.isLoggedIn = false;
+            appState.email = "";
+            appState.name = "";
+            appState.mcNick = "";
+            appState.avatarUrl = "";
+            appState.activeKey = "";
+            appState.subExpires = "";
+
             saveAppState();
-            location.reload();
+            syncUI();
+
+            // Переключаем вкладку на Главную и открываем модалку авторизации
+            switchTab('home', document.querySelectorAll('.nav-item')[0]);
+            toggleAuthMode('login');
+            document.getElementById('authModal').style.display = 'flex';
+
+            tg.showAlert("🚪 Вы успешно вышли из аккаунта!");
         }
 
         // --- ЗАГРУЗКА АВАТАРКИ ИЗ ГАЛЕРЕИ ---
@@ -788,6 +827,10 @@
         function saveProfile() {
             const name = document.getElementById('inputName').value.trim();
             const mc = document.getElementById('inputMcNick').value.trim();
+
+            if (name && !isValidName(name)) {
+                return tg.showAlert("⚠️ Имя пользователя должно состоять минимум из 3 символов, без пробелов, спецсимволов и эмодзи!");
+            }
 
             if(name) appState.name = name;
             if(mc) appState.mcNick = mc;
