@@ -226,29 +226,11 @@
             border-radius: var(--card-radius); width: 100%; max-width: 370px;
             padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 14px;
         }
-
-        /* Server Offline Screen Overlay */
-        #serverOfflineModal {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #06070a; z-index: 999; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; text-align: center;
-        }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
-
-    <!-- БЛОКИРОВЩИК: ЕСЛИ СЕРВЕР ВЫКЛЮЧЕН -->
-    <div id="serverOfflineModal">
-        <div style="font-size: 50px; margin-bottom: 16px;">🔴</div>
-        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 8px; color: #ff4757;">Сервер недоступен</h2>
-        <p style="font-size: 13px; color: var(--text-muted); max-width: 300px; line-height: 1.5; margin-bottom: 20px;">
-            Не удалось связаться с бэкендом EasyWin. Пожалуйста, убедитесь, что скрипт <b>server.py</b> запущен!
-        </p>
-        <button class="btn btn-glow" onclick="checkServerHealth()">🔄 Повторить подключение</button>
-    </div>
 
     <!-- Скрытый элемент для выбора фотографии из галереи -->
     <input type="file" id="galleryFileInput" accept="image/*" style="display: none;" onchange="handleGalleryUpload(event)">
@@ -428,7 +410,7 @@
             <span>Профиль</span>
         </div>
         <div class="nav-item" onclick="switchTab('settings', this)">
-            <span class="nav-icon">⚙️</span>
+            <span class="nav-icon">⚙️️</span>
             <span>Настройки</span>
         </div>
     </div>
@@ -479,10 +461,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const API_URL = "http://localhost:8000"; // Замени на IP/домен вашего сервера
-
         let appState = {
-            id: null,
             isLoggedIn: false,
             name: "",
             mcNick: "Steve",
@@ -502,61 +481,24 @@
             return re.test(name);
         }
 
-        // --- 1. ПРОВЕРКА ДОСТУПНОСТИ СЕРВЕРА ---
-        async function checkServerHealth() {
-            try {
-                const res = await fetch(`${API_URL}/api/health`, { method: 'GET' });
-                if (res.ok) {
-                    document.getElementById('serverOfflineModal').style.display = 'none';
-                    initAppSession();
-                } else {
-                    throw new Error();
-                }
-            } catch(e) {
-                document.getElementById('serverOfflineModal').style.display = 'flex';
-            }
-        }
-
-        // --- 2. ИНИЦИАЛИЗАЦИЯ И АВТО-ВХОД ---
-        async function initAppSession() {
-            const savedSession = localStorage.getItem('easywin_user_auth');
+        // Загрузка сессии из локальной памяти устройства
+        function initAppSession() {
+            const savedSession = localStorage.getItem('easywin_local_user');
             if (savedSession) {
                 try {
-                    const creds = JSON.parse(savedSession);
-                    // Авторизуемся на сервере заново для получения свежих данных из БД
-                    const res = await fetch(`${API_URL}/api/auth/login`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ name: creds.name, password: creds.password })
-                    });
-                    const data = await res.json();
-                    if (res.ok) {
-                        applyUserData(data.user);
-                        return;
-                    }
+                    const data = JSON.parse(savedSession);
+                    Object.assign(appState, data);
+                    appState.isLoggedIn = true;
+                    syncUI();
+                    initSnow();
+                    return;
                 } catch(e) {}
             }
-            // Если сессии нет или ошибка - показываем окно авторизации
             document.getElementById('authModal').style.display = 'flex';
         }
 
-        function applyUserData(user) {
-            appState.id = user.id;
-            appState.isLoggedIn = true;
-            appState.name = user.name;
-            appState.mcNick = user.mc_nick;
-            appState.avatarUrl = user.avatar_url || "";
-            appState.snowEnabled = user.snow_enabled;
-            appState.snowCount = user.snow_count;
-            appState.snowSpeed = user.snow_speed;
-            appState.bhEnabled = user.bh_enabled;
-            appState.bhScale = user.bh_scale;
-            appState.bhColor = user.bh_color;
-            appState.activeKey = user.active_key;
-            appState.subExpires = user.expires_at;
-
-            syncUI();
-            initSnow();
+        function saveLocalSession() {
+            localStorage.setItem('easywin_local_user', JSON.stringify(appState));
         }
 
         function syncUI() {
@@ -575,7 +517,6 @@
             document.getElementById('profileSubExpires').innerText = appState.subExpires || "Нет активной подписки";
             document.getElementById('homeTabTariff').innerText = appState.subExpires ? "ПРИВАТНЫЙ ДОСТУП" : "FREE BETA";
 
-            // Синхронизация слайдеров
             document.getElementById('toggleSnow').checked = appState.snowEnabled;
             document.getElementById('toggleBh').checked = appState.bhEnabled;
             document.getElementById('sCount').value = appState.snowCount;
@@ -588,28 +529,6 @@
 
             document.getElementById('snowSettingsCard').style.display = appState.snowEnabled ? 'block' : 'none';
             document.getElementById('bhSettingsCard').style.display = appState.bhEnabled ? 'block' : 'none';
-        }
-
-        // --- 3. СОХРАНЕНИЕ НАСТРОЕК В БАЗУ ДАННЫХ ---
-        async function syncSettingsWithServer() {
-            if (!appState.isLoggedIn || !appState.id) return;
-            try {
-                await fetch(`${API_URL}/api/user/save-settings`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        user_id: appState.id,
-                        mc_nick: appState.mcNick,
-                        avatar_url: appState.avatarUrl,
-                        snow_enabled: appState.snowEnabled,
-                        snow_count: appState.snowCount,
-                        snow_speed: appState.snowSpeed,
-                        bh_enabled: appState.bhEnabled,
-                        bh_scale: appState.bhScale,
-                        bh_color: appState.bhColor
-                    })
-                });
-            } catch(e){}
         }
 
         // --- ВХОД И РЕГИСТРАЦИЯ ---
@@ -625,7 +544,7 @@
             }
         }
 
-        async function submitRegister() {
+        function submitRegister() {
             const name = document.getElementById('regName').value.trim();
             const mc = document.getElementById('regMcNick').value.trim();
             const pass = document.getElementById('regPassword').value.trim();
@@ -634,66 +553,45 @@
             if (!isValidName(name)) return tg.showAlert("⚠️ Логин должен быть от 3 символов, без пробелов и эмодзи!");
             if (pass.length < 6) return tg.showAlert("⚠️ Пароль минимум 6 символов!");
 
-            try {
-                const res = await fetch(`${API_URL}/api/auth/register`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ name, password: pass, mc_nick: mc || "Steve" })
-                });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.detail);
-
-                // Сохраняем сессию
-                localStorage.setItem('easywin_user_auth', JSON.stringify({ name, password: pass }));
-                applyUserData(data.user);
-                closeModal('authModal');
-                tg.showAlert("🎉 Регистрация успешна!");
-            } catch(err) {
-                tg.showAlert("❌ " + err.message);
-            }
+            appState.isLoggedIn = true;
+            appState.name = name;
+            appState.mcNick = mc || "Steve";
+            
+            saveLocalSession();
+            syncUI();
+            closeModal('authModal');
+            tg.showAlert("🎉 Регистрация успешна!");
         }
 
-        async function submitLogin() {
+        function submitLogin() {
             const name = document.getElementById('loginName').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
 
-            if (!name || !pass) return tg.showAlert("⚠️ Заполните все поля!");
+            if (!name || !pass) return tg.showAlert("⚠️ Заполните логин и пароль!");
 
-            try {
-                const res = await fetch(`${API_URL}/api/auth/login`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ name, password: pass })
-                });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.detail);
+            appState.isLoggedIn = true;
+            appState.name = name;
 
-                // Сохраняем сессию для авто-входа
-                localStorage.setItem('easywin_user_auth', JSON.stringify({ name, password: pass }));
-                applyUserData(data.user);
-                closeModal('authModal');
-                tg.showAlert("✅ Вы вошли в аккаунт!");
-            } catch(err) {
-                tg.showAlert("❌ " + err.message);
-            }
+            saveLocalSession();
+            syncUI();
+            closeModal('authModal');
+            tg.showAlert("✅ Вы вошли в аккаунт!");
         }
 
         function logoutUser() {
-            localStorage.removeItem('easywin_user_auth');
+            localStorage.removeItem('easywin_local_user');
             appState.isLoggedIn = false;
-            appState.id = null;
             document.getElementById('authModal').style.display = 'flex';
             toggleAuthMode('login');
             tg.showAlert("🚪 Вы вышли из аккаунта!");
         }
 
-        // --- СОХРАНЕНИЕ ПРОФИЛЯ И АВАТАРА ---
         function saveProfile() {
             const mc = document.getElementById('inputMcNick').value.trim();
             if (mc) appState.mcNick = mc;
             syncUI();
-            syncSettingsWithServer();
-            tg.showAlert("💾 Изменения профиля сохранены в БД!");
+            saveLocalSession();
+            tg.showAlert("💾 Изменения профиля сохранены!");
         }
 
         function triggerGallerySelect() { document.getElementById('galleryFileInput').click(); }
@@ -705,7 +603,7 @@
                 reader.onload = function(e) {
                     appState.avatarUrl = e.target.result;
                     syncUI();
-                    syncSettingsWithServer();
+                    saveLocalSession();
                     tg.showAlert("🖼 Фото профиля обновлено!");
                 };
                 reader.readAsDataURL(file);
@@ -713,16 +611,16 @@
         }
 
         // --- ЭФФЕКТЫ ---
-        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); syncSettingsWithServer(); }
-        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; syncSettingsWithServer(); }
-        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; syncSettingsWithServer(); }
-        function updateBhColor(v) { appState.bhColor = v; syncSettingsWithServer(); }
+        function updateSnowCount(v) { appState.snowCount = parseInt(v); document.getElementById('valCount').innerText = v; initSnow(); saveLocalSession(); }
+        function updateSnowSpeed(v) { appState.snowSpeed = parseFloat(v); document.getElementById('valSpeed').innerText = v; saveLocalSession(); }
+        function updateBhScale(v) { appState.bhScale = parseFloat(v); document.getElementById('valBhScale').innerText = v; saveLocalSession(); }
+        function updateBhColor(v) { appState.bhColor = v; saveLocalSession(); }
 
         function toggleEffect(type) {
             if(type === 'snow') appState.snowEnabled = document.getElementById('toggleSnow').checked;
             else if(type === 'bh') appState.bhEnabled = document.getElementById('toggleBh').checked;
             syncUI();
-            syncSettingsWithServer();
+            saveLocalSession();
         }
 
         function downloadLauncher() { tg.showAlert("🚀 Загрузка EasyWin Launcher!"); }
@@ -799,7 +697,7 @@
         }
 
         // СТАРТ
-        checkServerHealth();
+        initAppSession();
         animate();
     </script>
 </body>
